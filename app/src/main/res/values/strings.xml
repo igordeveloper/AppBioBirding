@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BioBirding</string>
+    <string name="title_activity_gps">GpsActinvity</string>
+    <string name="update_location">Update Location</string>
+    <string name="btn_fused_location">Fused Location</string>
+    <string name="latitud">Latitude</string>
+    <string name="longitud">Longitude</string>
+</resources>
