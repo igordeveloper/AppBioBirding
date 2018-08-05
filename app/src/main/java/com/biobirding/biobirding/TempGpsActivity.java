@@ -1,59 +1,43 @@
 package com.biobirding.biobirding;
 
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.StrictMode;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.cert.Certificate;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLPeerUnverifiedException;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class GpsActivity extends AppCompatActivity {
+public class GpsActivity extends BaseActivity {
 
     private FusedLocationProviderClient client;
 
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gps);
+        //setContentView(R.layout.activity_gps);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
+        String nickname_bio = sharedPref.getString("nickname_bio", "123");
+        Log.d("log", String.valueOf(nickname_bio).toString());
         requestPermission();
 
         client = LocationServices.getFusedLocationProviderClient(this);
         client.flushLocations();
 
 
-        Button button = findViewById(R.id.getLocation);
+        /*Button button = findViewById(R.id.getLocation);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,11 +61,11 @@ public class GpsActivity extends AppCompatActivity {
                     }
                 });
             }
-        });
+        });*/
 
     }
 
-    private void requestWeather(Double latitude, Double longitude) {
+    /*private void requestWeather(Double latitude, Double longitude) {
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -127,7 +111,7 @@ public class GpsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
     private void requestPermission(){
         ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1 );
