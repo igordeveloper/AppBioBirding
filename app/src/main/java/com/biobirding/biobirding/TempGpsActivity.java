@@ -6,16 +6,13 @@ import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class GpsActivity extends BaseActivity {
+public class TempGpsActivity extends BaseActivity {
 
     private FusedLocationProviderClient client;
 
@@ -41,12 +38,12 @@ public class GpsActivity extends BaseActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(GpsActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
+                if (ActivityCompat.checkSelfPermission(TempGpsActivity.this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ) {
 
                     return;
                 }
                 
-                client.getLastLocation().addOnSuccessListener(GpsActivity.this, new OnSuccessListener<Location>() {
+                client.getLastLocation().addOnSuccessListener(TempGpsActivity.this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
                         if(location != null){

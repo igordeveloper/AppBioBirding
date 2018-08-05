@@ -5,5 +5,7 @@
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">api.darksky.net</domain>
     </domain-config>
-
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">206.81.1.173</domain>
+    </domain-config>
 </network-security-config>

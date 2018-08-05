@@ -1,11 +1,25 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="coordinatorLayoutStyle">@style/Widget.Design.CoordinatorLayout</item>
+        <item name="colorButtonNormal">@color/buttonColor</item>
+        <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Button.Custom</item>
+
+        <item name="android:colorSecondary">@color/buttonColor</item>
+        <item name="android:textColorSecondary">@color/buttonColor</item>
+
+
+
+    </style>
+
+    <style name="TextAppearance.AppCompat.Button.Custom">
+        <item name="android:textColor">@color/buttonColor</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,4 +31,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.NoActionBar.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.NoActionBar.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
+
+

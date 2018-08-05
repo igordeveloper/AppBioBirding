@@ -6,17 +6,18 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar" />
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar" />
 
-    <ListView
-        android:id="@+id/speciesList"
+    <com.biobirding.biobirding.CustomLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp">
+    </com.biobirding.biobirding.CustomLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/floating_action_button_fab_with_listview"
+        android:id="@+id/add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -26,4 +27,7 @@
         android:clickable="true"
         android:src="@drawable/ic_plus"
         app:elevation="4dp"/>
+
+
+
 </RelativeLayout>

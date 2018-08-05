@@ -19,8 +19,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/if_weather_44_2682807.svg" />
-                                      <entry key="outputName" value="ic_humity" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/Bio Birding/PNG/Bio Birding_logo_colorido.png" />
+                                      <entry key="outputName" value="logotipo" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -36,7 +36,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="84" />
+                                                <entry key="scalingPercent" value="136" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -46,7 +46,7 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="foregroundImage" value="$USER_HOME$/Downloads/Bio Birding/JPG/Bio Birding_logo_A.jpg" />
+                                      <entry key="foregroundImage" value="$USER_HOME$/Desktop/logo_toolbar.png" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -55,18 +55,64 @@
                             <entry key="launcherLegacy">
                               <value>
                                 <PersistentState>
+                                  <option name="children">
+                                    <map>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="trimmed" value="true" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                    </map>
+                                  </option>
                                   <option name="values">
                                     <map>
                                       <entry key="assetType" value="IMAGE" />
-                                      <entry key="cropped" value="true" />
                                       <entry key="iconShape" value="NONE" />
-                                      <entry key="imageAsset" value="$USER_HOME$/Downloads/if_temperature_85982.png" />
-                                      <entry key="outputName" value="ic_temperature" />
+                                      <entry key="imageAsset" value="$USER_HOME$/Desktop/logo_toolbar.png" />
+                                      <entry key="outputName" value="ic_logotipo_toolbar" />
                                     </map>
                                   </option>
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
+                          </map>
+                        </option>
+                      </PersistentState>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </PersistentState>
+          </value>
+        </entry>
+        <entry key="vectorWizard">
+          <value>
+            <PersistentState>
+              <option name="children">
+                <map>
+                  <entry key="vectorAssetStep">
+                    <value>
+                      <PersistentState>
+                        <option name="values">
+                          <map>
+                            <entry key="assetSourceType" value="FILE" />
+                            <entry key="autoMirrored" value="true" />
+                            <entry key="height" value="256" />
+                            <entry key="outputName" value="ic_plus" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="$USER_HOME$/Desktop/if_Plus_206460.svg" />
+                            <entry key="width" value="256" />
                           </map>
                         </option>
                       </PersistentState>

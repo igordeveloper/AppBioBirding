@@ -1,16 +1,21 @@
 package com.biobirding.biobirding;
 
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-public class TempBaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +23,16 @@ public class TempBaseActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
         boolean authenticate = sharedPref.getBoolean("authenticate_bio", false);
 
-        Log.d("log", "check autenticado");
         if(!authenticate){
-            startActivity(new Intent(TempBaseActivity.this, TempLoginActivity.class));
+            startActivity(new Intent(BaseActivity.this, LoginActivity.class));
         }
+
+        Bitmap bm =  BitmapFactory.decodeResource(getResources(), R.drawable.ic_logo_toolbar);
+        ActivityManager.TaskDescription taskDesc = new ActivityManager.TaskDescription(null, null, ContextCompat.getColor(this, R.color.colorPrimaryDark));
+        this.setTaskDescription(taskDesc);
     }
 
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
@@ -35,17 +44,25 @@ public class TempBaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.about:
-                startActivity(new Intent(TempBaseActivity.this, TempScrollingActivity.class));
+                startActivity(new Intent(BaseActivity.this, TempScrollingActivity.class));
                 return true;
+
             case R.id.editAccount:
-                startActivity(new Intent(TempBaseActivity.this, TempLoginActivity.class));
+                startActivity(new Intent(BaseActivity.this, LoginActivity.class));
                 return true;
+
             case R.id.loggof:
+                //Remove as sessões de preferência do aplicativo
                 SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.clear();
                 editor.commit();
-                startActivity(new Intent(TempBaseActivity.this, TempLoginActivity.class));
+
+                //Exclui a pilha de atividades em execução
+                Intent i = new Intent(this, LoginActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(i);
+                finish();
                 return true;
 
             default:

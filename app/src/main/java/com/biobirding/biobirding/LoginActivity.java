@@ -16,13 +16,13 @@ import java.security.NoSuchAlgorithmException;
 import utils.HashPassword;
 import webservice.Login;
 
-public class TempLoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.temp_activity_login);
+        setContentView(R.layout.activity_login);
 
         EditText nickname = findViewById(R.id.nickname);
         nickname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -68,7 +68,7 @@ public class TempLoginActivity extends AppCompatActivity {
                                     editor.putString("password_bio", pass);
                                     editor.putBoolean("authenticate_bio", true);
                                     editor.commit();
-                                    startActivity(new Intent(TempLoginActivity.this, TempMainActivity.class));
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 }else{
                                     notAuthorized();
                                 }
@@ -82,7 +82,7 @@ public class TempLoginActivity extends AppCompatActivity {
 
     public void clearMessage(){
         TextView textInvalid =  findViewById(R.id.invalid);
-        textInvalid.setVisibility(View.GONE);
+        textInvalid.setText(null);
     }
 
     public void notAuthorized(){
@@ -91,6 +91,6 @@ public class TempLoginActivity extends AppCompatActivity {
         nickname.setText(null);
         password.setText(null);
         TextView textInvalid =  findViewById(R.id.invalid);
-        textInvalid.setVisibility(View.VISIBLE);
+        textInvalid.setText(R.string.invalid);
     }
 }
