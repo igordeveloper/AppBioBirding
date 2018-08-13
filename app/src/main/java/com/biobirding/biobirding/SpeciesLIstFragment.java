@@ -1,6 +1,13 @@
 package com.biobirding.biobirding;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,27 +21,28 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.biobirding.biobirding.threads.dao.SearchLocalSpecies;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class SpeciesLIstFragment extends Fragment {
 
     protected ListView listView;
     protected EditText editText;
-    protected String species[];
     protected ArrayList<String> listSpecies;
     protected ArrayAdapter<String> listViewAdapter;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
 
         View view = inflater.inflate(R.layout.fragment_species_list, container, false);
         this.listView = view.findViewById(R.id.speciesListView);
         this.editText = view.findViewById(R.id.txtSearch);
-
-        initList();
+        initList(getContext());
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -44,13 +52,27 @@ public class SpeciesLIstFragment extends Fragment {
                 args.putString("specieName", (String) ((TextView) view).getText());
                 test.setArguments(args);
 
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, test);
-                transaction.addToBackStack(null);
-                transaction.commit();
+                if(getFragmentManager() != null) {
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, test);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            }
+        });
 
-                /*Toast.makeText(getContext(), ((TextView) view).getText(),
-                        Toast.LENGTH_SHORT).show();*/
+
+        FloatingActionButton add = view.findViewById(R.id.add);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(getFragmentManager() != null) {
+                    AddSpeciesFragment addSpeciesFragment = new AddSpeciesFragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, addSpeciesFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
             }
         });
 
@@ -62,9 +84,7 @@ public class SpeciesLIstFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(s.toString().equals("")){
-                    initList();
-                }else{
+                if(!s.toString().equals("")){
                     searchItem(s.toString());
                 }
             }
@@ -75,48 +95,39 @@ public class SpeciesLIstFragment extends Fragment {
             }
         });
 
-
-        // Inflate the layout for this fragment
         return view;
     }
 
 
-    public void searchItem(String str){
-        for (String specie:species){
-            if(!specie.contains(str)){
-                listSpecies.remove(specie);
+
+    public void searchItem(String search){
+
+        Handler mHandler = new Handler(Looper.getMainLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                List species = (List) msg.obj;
+                listSpecies.clear();
+
+                for (Object s:species){
+                    listSpecies.add(s.toString());
+                }
+
+                listViewAdapter.notifyDataSetChanged();
             }
-        }
+        };
 
-        this.listViewAdapter.notifyDataSetChanged();
-
+        SearchLocalSpecies listSpecies = new SearchLocalSpecies(getContext(), mHandler, search);
+        Thread thread = new Thread(listSpecies);
+        thread.start();
     }
 
-    public void initList(){
-        this.species = new String[] {"Arara",
-                "Bem-te-vi",
-                "Carcará",
-                "Tucanuçu",
-                "Sanhaçu",
-                "Tico-Tico",
-                "Pardal",
-                "Gavião-Carijó",
-                "Sabiá-pocá",
-                "Sabiá-do-Campo",
-                "Saíra-Amarela",
-                "Corruíra",
-                "Cambacica"};
-
-        this.listSpecies = new ArrayList<>(Arrays.asList(this.species));
-
-        this.listViewAdapter = new ArrayAdapter<String>(
-                getActivity(),
+    public void initList(Context context){
+        this.listSpecies = new ArrayList<>(Arrays.asList(new String[] {}));
+        this.listViewAdapter = new ArrayAdapter<>(
+                context,
                 android.R.layout.simple_list_item_1,
                 this.listSpecies
         );
-
         this.listView.setAdapter(listViewAdapter);
-
     }
-
 }

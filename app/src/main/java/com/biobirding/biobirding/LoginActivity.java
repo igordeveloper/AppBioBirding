@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import utils.HashPassword;
-import webservice.Login;
+import com.biobirding.biobirding.webservice.Login;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
                 new Thread(){
 
                     String response = new String();
-                    Login login = new Login();
+                    Login login = new Login( getApplicationContext());
                     EditText nickname = findViewById(R.id.nickname);
                     EditText password = findViewById(R.id.password);
                     String pass = password.getText().toString();
@@ -49,12 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             JSONObject json = login.check(nickname.getText().toString(), hash.encode256(pass));
                             response = json.getString("response");
-
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchAlgorithmException e) {
+                        } catch (IOException | JSONException | NoSuchAlgorithmException e) {
                             e.printStackTrace();
                         }
 

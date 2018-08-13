@@ -13,13 +13,10 @@
 
         <item name="android:colorSecondary">@color/buttonColor</item>
         <item name="android:textColorSecondary">@color/buttonColor</item>
-
-
-
     </style>
 
     <style name="TextAppearance.AppCompat.Button.Custom">
-        <item name="android:textColor">@color/buttonColor</item>
+        <item name="android:textColor">@color/textButtonColor</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

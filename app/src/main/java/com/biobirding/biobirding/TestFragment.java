@@ -14,6 +14,8 @@ public class TestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        getContext();
+
         View view = inflater.inflate(R.layout.fragment_test, container, false);
         TextView text = (TextView) view.findViewById(R.id.input);
         text.setText(getArguments().getString("specieName"));

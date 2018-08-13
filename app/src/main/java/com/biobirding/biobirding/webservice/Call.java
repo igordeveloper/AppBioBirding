@@ -1,4 +1,8 @@
-package webservice;
+package com.biobirding.biobirding.webservice;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,8 +12,10 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.NoSuchAlgorithmException;
+
+import utils.HashPassword;
 
 public class Call {
 
@@ -18,10 +24,30 @@ public class Call {
     private URL url;
     private String paramaters;
     private HttpURLConnection con;
+    private Context context;
+
+    public Call(Context context){
+        this.context = context;
+    }
 
     public void setConRequestProperty(String name, String value){
         this.con.setRequestProperty(name, value);
     }
+
+    public void setConRequestProperty(){
+        SharedPreferences sharedPref = this.context.getSharedPreferences("bio", Context.MODE_PRIVATE);
+        String nickname = sharedPref.getString("nickname_bio", "");
+        String password = sharedPref.getString("password_bio", "");
+        HashPassword hash = new HashPassword();
+        try {
+            this.con.setRequestProperty("nickname", nickname);
+            this.con.setRequestProperty("password", hash.encode256(password));
+        } catch (IOException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     public void setParameters(String paramaters){
         this.paramaters = paramaters;
