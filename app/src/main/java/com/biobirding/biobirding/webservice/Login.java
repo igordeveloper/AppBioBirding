@@ -17,7 +17,7 @@ public class Login extends Call {
         super.setHttpURLConnection();
         super.setConRequestProperty("nickname", nickname);
         super.setConRequestProperty("password", password);
-        super.setParameters("dasda");
+        super.setParameters("");
         return super.Response();
     }
 }

@@ -9,7 +9,7 @@ import com.biobirding.biobirding.dao.SpeciesDao;
 import com.biobirding.biobirding.entity.PopularName;
 import com.biobirding.biobirding.entity.Species;
 
-@Database(entities = {Species.class, PopularName.class}, version = 1)
+@Database(entities = {Species.class, PopularName.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;

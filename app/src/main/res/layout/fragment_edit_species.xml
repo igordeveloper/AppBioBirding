@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddSpeciesFragment"
+    tools:context=".EditSpeciesFragment"
     tools:layout_editor_absoluteY="25dp">
-
 
     <EditText
         android:id="@+id/scientific_name"
@@ -19,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/species_title" />
 
     <EditText
         android:id="@+id/notes"
@@ -35,10 +34,10 @@
         app:layout_constraintTop_toBottomOf="@+id/scientific_name" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/species_title"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:text="@string/add_specie"
+        android:text="@string/edit_specie"
         android:textAlignment="center"
         android:textAllCaps="true"
         android:textColor="#004d8B"
@@ -50,28 +49,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Spinner
-        android:id="@+id/conservationStateList"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dialog"
-        app:layout_constraintBottom_toTopOf="@+id/addSpecies"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/notes" />
-
 
     <Button
-        android:id="@+id/addSpecies"
+        android:id="@+id/editSpecies"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/save"
+        android:text="@string/edit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/conservationStateList" />
+
+    <Spinner
+        android:id="@+id/conservationStateList"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog"
+        app:layout_constraintBottom_toTopOf="@+id/editSpecies"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notes" />
 
 
 </android.support.constraint.ConstraintLayout>

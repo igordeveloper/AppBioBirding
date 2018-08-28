@@ -7,20 +7,34 @@
     <string name="password">Senha</string>
     <string name="invalid">E-mail ou senha inválida</string>
     <string name="logoff">Sair</string>
+    <string name="close">Fechar</string>
     <string name="editAccount">Editar perfil</string>
     <string name="about">Sobre</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+
     <string name="button_register">Inserir novo registro</string>
     <string name="button_species">Gerenciar espécies</string>
     <string name="button_search">Pesquisar registros</string>
     <string name="button_statistic">Estatísticas</string>
-    <string name="search">Pesquisar</string>
-    <string name="title_add_specie_fragment">Inserir uma nova espécie</string>
-    <string name="scientific_name">Nome científico</string>
-    <string name="description">Descrição</string>
-    <string name="save">Salvar</string>
+    <string name="button_edit_species">Editar Espécie</string>
+    <string name="button_popular_names">Gerenciar nomes populares</string>
 
+    <string name="search">Pesquisar</string>
+
+    <string name="add_specie">Inserir uma nova espécie</string>
+    <string name="edit_specie">Editar espécie</string>
+
+    <string name="scientific_name">Nome científico</string>
+    <string name="notes">Anotações</string>
+    <string name="requiredText">Preencha este campo</string>
+
+    <string name="save">Salvar</string>
+    <string name="edit">Editar</string>
+
+    <string name="saveNewSpecies">Espécie cadastrada com sucesso</string>
+
+    <string name="unauthorized_access">Acesso não autorizado !</string>
 
     <string name="action_settings">Settings</string>
 

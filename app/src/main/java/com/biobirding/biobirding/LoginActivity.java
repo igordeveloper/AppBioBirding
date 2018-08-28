@@ -18,6 +18,9 @@ import com.biobirding.biobirding.webservice.Login;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private JSONObject json;
+    private String authorized;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -38,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new Thread(){
 
-                    String response = new String();
                     Login login = new Login( getApplicationContext());
                     EditText nickname = findViewById(R.id.nickname);
                     EditText password = findViewById(R.id.password);
@@ -47,8 +49,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     public void run(){
                         try {
-                            JSONObject json = login.check(nickname.getText().toString(), hash.encode256(pass));
-                            response = json.getString("response");
+                            json = login.check(nickname.getText().toString(), hash.encode256(pass));
+                            authorized = json.getString("authorized");
                         } catch (IOException | JSONException | NoSuchAlgorithmException e) {
                             e.printStackTrace();
                         }
@@ -56,13 +58,19 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if(response == "true"){
-                                    SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor = sharedPref.edit();
-                                    editor.putString("nickname_bio", nickname.getText().toString());
-                                    editor.putString("password_bio", pass);
-                                    editor.putBoolean("authenticate_bio", true);
-                                    editor.commit();
+                                if(authorized.equals("true")){
+                                    try {
+                                        SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
+                                        SharedPreferences.Editor editor = sharedPref.edit();
+                                        editor.putString("nickname_bio", nickname.getText().toString());
+                                        editor.putString("password_bio", pass);
+                                        editor.putBoolean("authenticate_bio", true);
+                                        JSONObject userInfo = json.getJSONObject("userInfo");
+                                        editor.putInt("access_level", Integer.parseInt(userInfo.getString("accessLevel")));
+                                        editor.apply();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
                                     startActivity(new Intent(LoginActivity.this, MainActivity.class));
                                 }else{
                                     notAuthorized();

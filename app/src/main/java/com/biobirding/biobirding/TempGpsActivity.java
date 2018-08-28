@@ -2,13 +2,17 @@ package com.biobirding.biobirding;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
@@ -20,9 +24,9 @@ public class TempGpsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_gps);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //Toolbar toolbar = findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        //getSupportActionBar().setDisplayShowTitleEnabled(false);
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
@@ -33,8 +37,35 @@ public class TempGpsActivity extends BaseActivity {
         client = LocationServices.getFusedLocationProviderClient(this);
         client.flushLocations();
 
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        client.getLastLocation().addOnSuccessListener(TempGpsActivity.this, new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
 
-        /*Button button = findViewById(R.id.getLocation);
+                    Log.d("latitude", String.valueOf(location.getLatitude()));
+                    Log.d("longitude", String.valueOf(location.getLongitude()));
+
+                    //TextView latitude = findViewById(R.id.latitude);
+                    //TextView longitude = findViewById(R.id.longitude);
+
+                    //latitude.setText(String.valueOf(location.getLatitude()));
+                    //longitude.setText(String.valueOf(location.getLongitude()));
+
+                    //requestWeather(location.getLatitude(), location.getLongitude());
+                }
+            }
+        });
+        /*Button button = findViewById(R.id.get);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,20 +74,7 @@ public class TempGpsActivity extends BaseActivity {
                     return;
                 }
                 
-                client.getLastLocation().addOnSuccessListener(TempGpsActivity.this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if(location != null){
-                            TextView latitude = findViewById(R.id.latitude);
-                            TextView longitude = findViewById(R.id.longitude);
 
-                            latitude.setText(String.valueOf(location.getLatitude()));
-                            longitude.setText(String.valueOf(location.getLongitude()));
-
-                            requestWeather(location.getLatitude(), location.getLongitude());
-                        }
-                    }
-                });
             }
         });*/
 
@@ -87,7 +105,7 @@ public class TempGpsActivity extends BaseActivity {
             JSONObject currently = (JSONObject) json.get("currently");
 
             TextView temperture = findViewById(R.id.temperature);
-            temperture.setText(String.valueOf(currently.getString("temperature") + " °C"));
+                    temperture.setText(String.valueOf(currently.getString("temperature") + " °C"));
 
             TextView humidity = findViewById(R.id.humidity);
             Double h = Double.parseDouble(currently.getString("humidity"));

@@ -6,32 +6,34 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 @Entity(tableName = "species")
-public class Species {
+public class Species implements Serializable {
 
     @PrimaryKey
-    @NonNull
     @ColumnInfo(name = "scientific_name")
+    @NonNull
     private String scientificName;
 
-    public String getScientificName() {
-        return scientificName;
-    }
+    @ColumnInfo(name = "characteristics")
+    private String characteristics;
 
-    public void setScientificName(String scientificName) {
+    public Species(@NonNull String scientificName){
         this.scientificName = scientificName;
-    }
 
-    public String getCharacteristics() {
-        return characteristics;
     }
 
     public void setCharacteristics(String characteristics) {
         this.characteristics = characteristics;
     }
 
-    @ColumnInfo(name = "characteristics")
-    private String characteristics;
+    @NonNull
+    public String getScientificName() {
+        return scientificName;
+    }
 
-
+    public String getCharacteristics() {
+        return characteristics;
+    }
 }
