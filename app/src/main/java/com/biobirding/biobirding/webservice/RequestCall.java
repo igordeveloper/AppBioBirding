@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 
 import utils.HashPassword;
 
-public class ConRequest {
+public class RequestCall {
 
     private URL url;
     private String parameters;
@@ -28,7 +28,7 @@ public class ConRequest {
     private Context context;
     private SharedPreferences sharedPreferences;
 
-    public ConRequest(){
+    public RequestCall(){
         context = AppApplication.getAppContext();
         sharedPreferences = context.getSharedPreferences("bio", Context.MODE_PRIVATE);
     }

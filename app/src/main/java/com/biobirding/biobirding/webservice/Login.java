@@ -1,18 +1,13 @@
 package com.biobirding.biobirding.webservice;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 
-public class Login extends Call {
+public class Login extends RequestCall {
 
-    public Login(Context context) {
-        super(context);
-    }
-
-    public JSONObject check(String nickname, String password) throws IOException, JSONException {
+    public JSONObject check(String nickname, String password) throws IOException, JSONException, InvalidKeyException {
         super.setRoute("/user/validate");
         super.setHttpURLConnection();
         super.setConRequestProperty("nickname", nickname);
