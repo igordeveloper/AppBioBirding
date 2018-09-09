@@ -8,11 +8,11 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 @Entity(tableName = "popular_name",
-        primaryKeys = {"name", "scientific_name"},
+        primaryKeys = {"name", "id"},
         foreignKeys = @ForeignKey(entity = Species.class,
-        parentColumns = "scientific_name",
-        childColumns = "scientific_name"),
-        indices = {@Index("scientific_name")}
+        parentColumns = "id",
+        childColumns = "id"),
+        indices = {@Index("id")}
 )
 
 public class PopularName {
@@ -22,8 +22,8 @@ public class PopularName {
     private String name;
 
     @NonNull
-    @ColumnInfo(name = "scientific_name")
-    private String scientificName;
+    @ColumnInfo(name = "id")
+    private String id;
 
     @NonNull
     public String getName() {
@@ -35,11 +35,11 @@ public class PopularName {
     }
 
     @NonNull
-    public String getScientificName() {
-        return scientificName;
+    public String getId() {
+        return id;
     }
 
-    public void setScientificName(@NonNull String scientificName) {
-        this.scientificName = scientificName;
+    public void setId(@NonNull String id) {
+        this.id = id;
     }
 }
