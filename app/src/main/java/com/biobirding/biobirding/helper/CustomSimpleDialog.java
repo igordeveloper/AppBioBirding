@@ -4,11 +4,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
+import com.biobirding.biobirding.AppApplication;
 import com.biobirding.biobirding.R;
 
 public final class CustomSimpleDialog extends AlertDialog.Builder {
 
-    public CustomSimpleDialog(Context context, String message) {
+    public CustomSimpleDialog(String message, Context context) {
         super(context);
         setCancelable(false);
         setMessage(message);
