@@ -1,13 +1,13 @@
 package com.biobirding.biobirding.webservice;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Base64;
-import android.util.Log;
-
+import com.biobirding.biobirding.AppApplication;
+import com.biobirding.biobirding.LogoffActivity;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -20,17 +20,17 @@ import java.security.NoSuchAlgorithmException;
 
 import utils.HashPassword;
 
-public class Call {
+public class ConRequest {
 
-    private final String DOMAIN = "http://206.81.1.173";
-    private final String METHOD = "POST";
     private URL url;
-    private String paramaters;
+    private String parameters;
     private HttpURLConnection con;
     private Context context;
+    private SharedPreferences sharedPreferences;
 
-    public Call(Context context){
-        this.context = context;
+    public ConRequest(){
+        context = AppApplication.getAppContext();
+        sharedPreferences = context.getSharedPreferences("bio", Context.MODE_PRIVATE);
     }
 
     public void setConRequestProperty(String name, String value){
@@ -38,14 +38,15 @@ public class Call {
     }
 
     public void setConRequestProperty(){
-        SharedPreferences sharedPref = this.context.getSharedPreferences("bio", Context.MODE_PRIVATE);
-        String nickname = sharedPref.getString("nickname_bio", "");
-        String password = sharedPref.getString("password_bio", "");
+
+        String nickname = sharedPreferences.getString("nickname_bio", "");
+        String password = sharedPreferences.getString("password_bio", "");
         HashPassword hash = new HashPassword();
         try {
             String str = nickname + "||" + hash.encode256(password);
             byte[] authorization = str.getBytes("UTF-8");
             this.con.setRequestProperty("authorizationCode", Base64.encodeToString(authorization, Base64.NO_WRAP).trim());
+
         } catch (IOException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -53,20 +54,22 @@ public class Call {
 
 
 
-    public void setParameters(String paramaters){
-        this.paramaters = paramaters;
+    public void setParameters(String parameters){
+        this.parameters = parameters;
     }
 
     public String getParameters(){
-        return this.paramaters;
+        return this.parameters;
     }
 
     public void setRoute(String route)  throws IOException{
+        String DOMAIN = "http://206.81.1.173";
         this.url = new URL(DOMAIN + route);
     }
 
     public void setHttpURLConnection() throws IOException {
         this.con = (HttpURLConnection) this.url.openConnection();
+        String METHOD = "POST";
         this.con.setRequestMethod(METHOD);
     }
 
@@ -80,7 +83,7 @@ public class Call {
 
         BufferedReader iny = new BufferedReader(new InputStreamReader(con.getInputStream()));
         String output;
-        StringBuffer response = new StringBuffer();
+        StringBuilder response = new StringBuilder();
 
         while ((output = iny.readLine()) != null) {
             response.append(output);
@@ -88,6 +91,17 @@ public class Call {
         iny.close();
 
         JSONObject json = new JSONObject(response.toString());
+
+        if(json.has("exception")){
+            throw new IOException(json.getString("exception"));
+        }
+
+        if(json.getString("authorized").equals("false")){
+            Intent intent = new Intent();
+            intent.setClass(context, LogoffActivity.class);
+            context.startActivity(intent);
+        }
+
         return json;
     }
 }
