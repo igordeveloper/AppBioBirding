@@ -1,11 +1,15 @@
 package com.biobirding.biobirding;
 
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.biobirding.biobirding.database.AppDatabase;
+import com.biobirding.biobirding.entity.Species;
 import com.biobirding.biobirding.helper.CustomSimpleDialog;
 import com.biobirding.biobirding.helper.CustomSnackBar;
 
@@ -61,14 +65,14 @@ public class MainActivity extends BaseActivity {
                         AppDatabase.class, "Species").build();
 
                 Species s = new Species();
-                s.setScientificName("Tangara Cayana");
-                s.setCharacteristics("teste");
-                dbb.speciesDao().insert(s);
+                s.setId(999);
+                s.setScientificName("tangara cayana");
+                s.setNotes("dasdas");
+                s.setConservationState("bom");
 
-                List<Species> species = dbb.speciesDao().getAll();
-                List<PopularName> names = dbb.popularNameDao().getAll();
+                dbb.speciesDao().insert(s);*/
 
-                for (Species sp : species) {
+                /*for (Species sp : species) {
                     Log.d("specie/:", sp.getScientificName());
                 }*/
             }

@@ -1,5 +1,6 @@
 package com.biobirding.biobirding;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,6 @@ public class InfoSpeciesFragment extends Fragment {
             }
         }
 
-
         /*Button to edit a species*/
         Button editSpecies = view.findViewById(R.id.buttonEditSpecies);
         editSpecies.setOnClickListener(new View.OnClickListener() {
@@ -55,18 +55,13 @@ public class InfoSpeciesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(getFragmentManager()!=null){
-                    ListOfPopularNamesFragment listOfPopularNamesFragment = new ListOfPopularNamesFragment();
-                    listOfPopularNamesFragment.setArguments(species);
-                    transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, listOfPopularNamesFragment);
-                    transaction.commit();
+                    Intent i = new Intent(getContext(), PopularNameActivity.class);
+                    i.putExtra("species", species);
+                    startActivity(i);
                 }
             }
         });
 
         return view;
     }
-
-
-
 }

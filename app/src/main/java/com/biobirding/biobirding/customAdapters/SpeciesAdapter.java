@@ -1,4 +1,4 @@
-package com.biobirding.biobirding.entity;
+package com.biobirding.biobirding.customAdapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.biobirding.biobirding.R;
+import com.biobirding.biobirding.entity.Species;
 
 public class SpeciesAdapter extends BaseAdapter{
 

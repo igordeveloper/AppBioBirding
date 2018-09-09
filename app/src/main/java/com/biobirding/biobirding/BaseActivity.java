@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -27,8 +28,6 @@ public class BaseActivity extends AppCompatActivity {
             startActivity(new Intent(BaseActivity.this, LoginActivity.class));
         }
 
-        ActivityManager.TaskDescription taskDesc = new ActivityManager.TaskDescription(null, null, ContextCompat.getColor(this, R.color.colorPrimaryDark));
-        this.setTaskDescription(taskDesc);
     }
 
     @Override
@@ -43,7 +42,7 @@ public class BaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.about:
-                startActivity(new Intent(BaseActivity.this, TempScrollingActivity.class));
+                //startActivity(new Intent(BaseActivity.this, TempScrollingActivity.class));
                 return true;
 
             case R.id.editAccount:

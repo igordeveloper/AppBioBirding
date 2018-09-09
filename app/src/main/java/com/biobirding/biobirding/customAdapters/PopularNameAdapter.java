@@ -6,34 +6,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-
-import java.util.ArrayList;
-import android.view.LayoutInflater;
 import android.widget.TextView;
 
-import com.biobirding.biobirding.R;
+import com.biobirding.biobirding.entity.PopularName;
 import com.biobirding.biobirding.entity.Species;
 
-public class SpeciesAdapter extends BaseAdapter{
+import java.util.ArrayList;
+
+public class PopularNameAdapter extends BaseAdapter{
 
     private Activity context;
-    private ArrayList<Species> species;
+    private ArrayList<PopularName> popularNames;
     private static LayoutInflater inflater;
 
-    public SpeciesAdapter(Activity context, ArrayList<Species> species){
+    public PopularNameAdapter(Activity context, ArrayList<PopularName> popularNames){
         this.context = context;
-        this.species = species;
+        this.popularNames = popularNames;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return this.species.size();
+        return this.popularNames.size();
     }
 
     @Override
-    public Species getItem(int position) {
-        return this.species.get(position);
+    public PopularName getItem(int position) {
+        return this.popularNames.get(position);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class SpeciesAdapter extends BaseAdapter{
 
         view = (view == null) ? inflater.inflate(android.R.layout.simple_list_item_1, null) : view;
         TextView textView = (TextView) view.findViewById(android.R.id.text1);
-        textView.setText(species.get(position).getScientificName());
+        textView.setText(popularNames.get(position).getName());
         return view;
     }
 }

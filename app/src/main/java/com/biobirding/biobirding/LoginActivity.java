@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import utils.HashPassword;
 import com.biobirding.biobirding.webservice.Login;
@@ -41,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 new Thread(){
 
-                    Login login = new Login( getApplicationContext());
+                    Login login = new Login();
                     EditText nickname = findViewById(R.id.nickname);
                     EditText password = findViewById(R.id.password);
                     String pass = password.getText().toString();
@@ -53,12 +55,17 @@ public class LoginActivity extends AppCompatActivity {
                             authorized = json.getString("authorized");
                         } catch (IOException | JSONException | NoSuchAlgorithmException e) {
                             e.printStackTrace();
+                        } catch (InvalidKeyException e) {
+                            e.printStackTrace();
                         }
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if(authorized.equals("true")){
+
+                                Log.d("---------", json.toString());
+
+                                if(json.has("authorized") && authorized.equals("true")){
                                     try {
                                         SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
                                         SharedPreferences.Editor editor = sharedPref.edit();

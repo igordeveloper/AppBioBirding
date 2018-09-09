@@ -1,7 +1,8 @@
 package com.biobirding.biobirding;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,20 +15,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.biobirding.biobirding.entity.Species;
 import com.biobirding.biobirding.helper.CustomSimpleDialog;
-import com.biobirding.biobirding.webservice.SpeciesCall;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
+import com.biobirding.biobirding.threads.InsertSpecieThread;
 
 public class AddSpeciesFragment extends Fragment {
 
     private EditText scientificName;
     private EditText notes;
-    private JSONObject json;
     private Spinner spinner;
 
     @Override
@@ -53,57 +48,30 @@ public class AddSpeciesFragment extends Fragment {
 
 
                 if(validateFields()) {
-
-                    new Thread() {
-
-                        SpeciesCall speciesCall = new SpeciesCall(getContext());
-
+                    Handler handler = new Handler(new Handler.Callback() {
                         @Override
-                        public void run() {
-                            try {
-
-                                String conservationState = null;
-                                if(spinner.getSelectedItemId() != 0){
-                                    conservationState = spinner.getSelectedItem().toString();
-                                }
-
-                                json = speciesCall.insert(scientificName.getText().toString(), notes.getText().toString(), conservationState);
-
-                                if (getActivity() != null) {
-
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (json.has("exception")) {
-                                                try {
-                                                    CustomSimpleDialog alert = new CustomSimpleDialog(getContext(), json.getString("exception"));
-                                                    alert.show();
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }else if (!json.has("authorized")) {
-                                                startActivity(new Intent(getActivity(), LogoffActivity.class));
-                                            }else {
-                                                try {
-                                                    CustomSimpleDialog alert = new CustomSimpleDialog(getContext(), json.getString("response"));
-                                                    alert.show();
-                                                    redirectActivity();
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-
-                            } catch (IOException | JSONException e) {
-                                e.printStackTrace();
-                            }
-
+                        public boolean handleMessage(Message msg) {
+                            String message = (String) msg.obj;
+                            CustomSimpleDialog alert = new CustomSimpleDialog(message, getContext());
+                            alert.show();
+                            redirectActivity();
+                            return true;
                         }
-                    }.start();
-                }
+                    });
 
+                    String conservationState = null;
+                    if(spinner.getSelectedItemId() != 0){
+                        conservationState = spinner.getSelectedItem().toString();
+                    }
+
+                    Species species = new Species();
+                    species.setScientificName(scientificName.getText().toString());
+                    species.setNotes(notes.getText().toString());
+                    species.setConservationState(conservationState);
+
+                    InsertSpecieThread insertSpecieThread = new InsertSpecieThread(handler, species);
+                    insertSpecieThread.start();
+                }
             }
         });
 
@@ -119,6 +87,7 @@ public class AddSpeciesFragment extends Fragment {
         }
     }
 
+
     public boolean validateFields(){
         if(TextUtils.isEmpty(scientificName.getText().toString())){
             scientificName.setError(getString(R.string.requiredText));
@@ -127,5 +96,4 @@ public class AddSpeciesFragment extends Fragment {
 
         return true;
     }
-
 }
