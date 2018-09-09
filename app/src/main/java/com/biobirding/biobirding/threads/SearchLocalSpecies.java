@@ -1,4 +1,4 @@
-package com.biobirding.biobirding.threads.dao;
+package com.biobirding.biobirding.threads;
 
 import android.content.Context;
 import android.os.Handler;
