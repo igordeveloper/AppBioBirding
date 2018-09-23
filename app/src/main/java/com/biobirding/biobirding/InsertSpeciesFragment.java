@@ -16,7 +16,6 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.helper.CustomSimpleDialog;
 import com.biobirding.biobirding.threads.InsertSpecieThread;
 
 public class AddSpeciesFragment extends Fragment {
@@ -42,6 +41,7 @@ public class AddSpeciesFragment extends Fragment {
         this.scientificName = view.findViewById(R.id.scientific_name);
         this.notes = view.findViewById(R.id.notes);
 
+
         addSpecies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,8 +52,8 @@ public class AddSpeciesFragment extends Fragment {
                         @Override
                         public boolean handleMessage(Message msg) {
                             String message = (String) msg.obj;
-                            CustomSimpleDialog alert = new CustomSimpleDialog(message, getContext());
-                            alert.show();
+                            //CustomSimpleDialog alert = new CustomSimpleDialog(message, getContext());
+                            //alert.show();
                             redirectActivity();
                             return true;
                         }

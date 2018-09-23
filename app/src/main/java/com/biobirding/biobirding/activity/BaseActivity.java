@@ -1,4 +1,4 @@
-package com.biobirding.biobirding;
+package com.biobirding.biobirding.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.biobirding.biobirding.activity.MainActivity;import com.biobirding.biobirding.helper.CustomSnackBar;
+import com.biobirding.biobirding.R;
+import com.biobirding.biobirding.helper.CustomSnackBar;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -24,7 +24,7 @@ public class BaseActivity extends AppCompatActivity {
         this.accessLevel = sharedPref.getInt("access_level", 0);
 
         if(!authenticate){
-            startActivity(new Intent(MainActivity.BaseActivity.this, LoginActivity.class));
+            startActivity(new Intent(BaseActivity.this, LoginActivity.class));
         }
     }
 
@@ -40,7 +40,7 @@ public class BaseActivity extends AppCompatActivity {
         switch (item.getItemId()) {
 
             case R.id.about:
-                CustomSnackBar.make(getWindow().getDecorView(), getResources().getString(R.string.dev));
+                startActivity(new Intent(BaseActivity.this, AboutActivity.class));
                 return true;
 
             case R.id.editAccount:
@@ -48,7 +48,7 @@ public class BaseActivity extends AppCompatActivity {
                 return true;
 
             case R.id.loggof:
-                startActivity(new Intent(MainActivity.BaseActivity.this, LogoffActivity.class));
+                startActivity(new Intent(BaseActivity.this, LogoffActivity.class));
                 return true;
 
             default:

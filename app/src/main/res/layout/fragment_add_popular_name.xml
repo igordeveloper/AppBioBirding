@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.biobirding.biobirding.fragments.InsertSpeciesFragment"
+    tools:layout_editor_absoluteY="25dp">
+
+
+    <EditText
+        android:id="@+id/scientific_name"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/scientific_name"
+        android:inputType="textPersonName"
+        android:maxLength="120"
+        app:layout_constraintBottom_toTopOf="@+id/notes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <EditText
+        android:id="@+id/notes"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/notes"
+        android:inputType="textMultiLine"
+        android:lines="3"
+        app:layout_constraintBottom_toTopOf="@+id/conservationStateList"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scientific_name" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:text="@string/add_specie"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="#004d8B"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/scientific_name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/conservationStateList"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:spinnerMode="dialog"
+        app:layout_constraintBottom_toTopOf="@+id/addSpecies"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notes" />
+
+
+    <Button
+        android:id="@+id/addSpecies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/conservationStateList" />
+
+
+</android.support.constraint.ConstraintLayout>

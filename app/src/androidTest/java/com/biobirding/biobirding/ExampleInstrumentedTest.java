@@ -1,4 +1,4 @@
-package com.biobirding.biobirding;
+package com.biobirding.app;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
