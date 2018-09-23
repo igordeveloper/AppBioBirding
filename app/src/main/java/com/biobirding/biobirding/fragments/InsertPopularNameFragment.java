@@ -12,46 +12,38 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.biobirding.biobirding.R;
+import com.biobirding.biobirding.entity.PopularName;
 import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.threads.InsertSpecieThread;
+import com.biobirding.biobirding.threads.InsertPopularNameThread;
 
-public class InsertSpeciesFragment extends Fragment {
+public class InsertPopularNameFragment extends Fragment {
 
-    private EditText scientificName;
-    private EditText notes;
-    private Spinner spinner;
-    private Button addSpecies;
+    private EditText popularName;
+    private Button addPopularName;
+    private Species species;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_add_species, container, false);
+        final View view = inflater.inflate(R.layout.fragment_add_popular_name, container, false);
 
-        this.spinner = view.findViewById(R.id.conservationStateList);
-
-        if (getContext() != null) {
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                    R.array.items, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            this.spinner.setAdapter(adapter);
+        if (getArguments() != null) {
+            Bundle bundle = getArguments();
+            this.species = (Species) bundle.getSerializable("species");
         }
 
-        this.addSpecies = view.findViewById(R.id.addSpecies);
-        this.scientificName = view.findViewById(R.id.scientific_name);
-        this.notes = view.findViewById(R.id.notes);
+        this.addPopularName = view.findViewById(R.id.edit_popular_name);
+        TextView scientificName = view.findViewById(R.id.scientific_name);
+        this.popularName = view.findViewById(R.id.popular_name);
+        scientificName.setText(species.getScientificName());
 
-        addSpecies.setOnClickListener(new View.OnClickListener() {
-
+        addPopularName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                addSpecies.setEnabled(false);
-
                 if(validateFields()) {
 
                     Handler handler = new Handler(new Handler.Callback() {
@@ -59,45 +51,41 @@ public class InsertSpeciesFragment extends Fragment {
                         public boolean handleMessage(Message msg) {
                             Object response = msg.obj;
 
-                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                            if(getContext() != null){
+                                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                                if(response.getClass() == String.class ){
+                                    alert.setMessage((String)response);
+                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            addPopularName.setEnabled(true);
+                                        }
+                                    });
+                                    alert.show();
+                                }
 
-                            if(response.getClass() == String.class ){
-                                alert.setMessage((String)response);
-                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        addSpecies.setEnabled(true);
-                                    }
-                                });
-                                alert.show();
+                                if(response.getClass() == Boolean.class ){
+                                    alert.setMessage(R.string.insert_popular_name);
+                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            redirectActivity();
+                                        }
+                                    });
+                                    alert.show();
+                                }
+                                return true;
                             }
-
-                            if(response.getClass() == Boolean.class ){
-                                alert.setMessage(R.string.insert_species);
-                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        redirectActivity();
-                                    }
-                                });
-                                alert.show();
-                            }
-                            return true;
+                            return false;
                         }
                     });
 
-                    String conservationState = "";
-                    if(spinner.getSelectedItemId() != 0){
-                        conservationState = spinner.getSelectedItem().toString();
-                    }
+                    PopularName name = new PopularName();
+                    name.setName(popularName.getText().toString());
+                    name.setId(species.getId());
 
-                    Species species = new Species();
-                    species.setScientificName(scientificName.getText().toString());
-                    species.setNotes(notes.getText().toString());
-                    species.setConservationState(conservationState);
-
-                    InsertSpecieThread insertSpecieThread = new InsertSpecieThread(handler, species);
-                    insertSpecieThread.start();
+                    InsertPopularNameThread insertPopularNameThread = new InsertPopularNameThread(handler, name);
+                    insertPopularNameThread.start();
                 }
             }
         });
@@ -107,17 +95,20 @@ public class InsertSpeciesFragment extends Fragment {
 
     public void redirectActivity(){
         if(getFragmentManager() != null) {
-            ListOfSpeciesFragment speciesLIstFragment = new ListOfSpeciesFragment();
+            ListOfPopularNamesFragment listOfPopularNamesFragment = new ListOfPopularNamesFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("species", species);
+            listOfPopularNamesFragment.setArguments(bundle);
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, speciesLIstFragment);
+            transaction.replace(R.id.fragment_container, listOfPopularNamesFragment);
             transaction.commit();
         }
     }
 
 
     public boolean validateFields(){
-        if(TextUtils.isEmpty(scientificName.getText().toString())){
-            scientificName.setError(getString(R.string.requiredText));
+        if(TextUtils.isEmpty(popularName.getText().toString())){
+            popularName.setError(getString(R.string.requiredText));
             return false;
         }
 
