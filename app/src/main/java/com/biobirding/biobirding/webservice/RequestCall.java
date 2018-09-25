@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Base64;
+
 import com.biobirding.biobirding.AppApplication;
-import com.biobirding.biobirding.LogoffActivity;
+import com.biobirding.biobirding.activity.LogoffActivity;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -16,9 +18,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.NoSuchAlgorithmException;
-
-import utils.HashPassword;
 
 public class RequestCall {
 
@@ -41,13 +40,12 @@ public class RequestCall {
 
         String nickname = sharedPreferences.getString("nickname_bio", "");
         String password = sharedPreferences.getString("password_bio", "");
-        HashPassword hash = new HashPassword();
         try {
-            String str = nickname + "||" + hash.encode256(password);
+            String str = nickname + "||" + password;
             byte[] authorization = str.getBytes("UTF-8");
             this.con.setRequestProperty("authorizationCode", Base64.encodeToString(authorization, Base64.NO_WRAP).trim());
 
-        } catch (IOException | NoSuchAlgorithmException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -73,7 +71,7 @@ public class RequestCall {
         this.con.setRequestMethod(METHOD);
     }
 
-    public JSONObject Response() throws IOException, JSONException {
+    public JSONObject Response() throws IOException, JSONException, InterruptedException{
         this.con.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(this.con.getOutputStream());
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(wr, "UTF-8"));
@@ -92,14 +90,14 @@ public class RequestCall {
 
         JSONObject json = new JSONObject(response.toString());
 
-        if(json.has("exception")){
-            throw new IOException(json.getString("exception"));
-        }
-
-        if(json.getString("authorized").equals("false")){
+        if(json.has("authorized") && json.getString("authorized").equals("false")){
             Intent intent = new Intent();
             intent.setClass(context, LogoffActivity.class);
             context.startActivity(intent);
+        }
+
+        if (json.has("exception")) {
+            throw new InterruptedException(json.getString("exception"));
         }
 
         return json;
