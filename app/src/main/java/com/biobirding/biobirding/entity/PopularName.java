@@ -4,8 +4,9 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 
 @Entity(tableName = "popular_name",
         primaryKeys = {"name", "id"},
@@ -15,7 +16,7 @@ import android.support.annotation.NonNull;
         indices = {@Index("id")}
 )
 
-public class PopularName {
+public class PopularName implements Serializable{
 
     @NonNull
     @ColumnInfo(name = "name")
@@ -23,7 +24,7 @@ public class PopularName {
 
     @NonNull
     @ColumnInfo(name = "id")
-    private String id;
+    private Integer id;
 
     @NonNull
     public String getName() {
@@ -35,11 +36,11 @@ public class PopularName {
     }
 
     @NonNull
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
+    public void setId(@NonNull Integer id) {
         this.id = id;
     }
 }
