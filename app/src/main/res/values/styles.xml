@@ -11,7 +11,6 @@
         <item name="colorButtonNormal">@color/buttonColor</item>
         <item name="android:textAppearanceButton">@style/TextAppearance.AppCompat.Button.Custom</item>
 
-        <item name="android:colorSecondary">@color/buttonColor</item>
         <item name="android:textColorSecondary">@color/buttonColor</item>
     </style>
 
