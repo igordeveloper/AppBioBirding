@@ -4,11 +4,17 @@
     <string name="update_location">Entrar</string>
     <string name="btn_fused_location">Atualizar localização</string>
     <string name="nickname">Nickname ou E-mail</string>
+    <string name="email">Informe seu email</string>
     <string name="password">Senha</string>
     <string name="invalid">E-mail ou senha inválida</string>
+    <string name="invalid_email">E-mail não encontrado</string>
+
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+
     <string name="logoff">Sair</string>
     <string name="close">Fechar</string>
-    <string name="editAccount">Editar perfil</string>
+    <string name="edit_password">Editar senha</string>
     <string name="about">Sobre</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
@@ -21,24 +27,69 @@
     <string name="button_popular_names">Gerenciar nomes populares</string>
 
     <string name="search">Pesquisar</string>
+    <string name="save">Salvar</string>
+    <string name="edit">Editar</string>
+    <string name="update">Atualizar</string>
 
+    <string name="unauthorized_access">Acesso não autorizado !</string>
+    <string name="action_settings">Settings</string>
+    <string name="forgot_password">Esqueci minha senha</string>
+    <string name="dataUpdate">Atualização de dados necessária</string>
+    <string name="dataUpdateInfo">Certifique-se de estar conectado a internet antes de inciar o processo de atualização de dados.</string>
+    <string name="without_connection">Sem conexão com a Internet</string>
+
+    <!-- Email -->
+    <string name="send_email">E-mail enviado!</string>
+    <string name="not_found_email">E-mail não encontrado!</string>
+
+    <!-- Species -->
+    <string name="insert_species">Espécie inserida com sucesso</string>
+    <string name="update_species">Espécie atualizada com sucesso</string>
+    <string name="not_found_species">Espécie não encontrada</string>
+    <string name="saveNewSpecies">Espécie cadastrada com sucesso</string>
     <string name="add_specie">Inserir uma nova espécie</string>
     <string name="edit_specie">Editar espécie</string>
-
     <string name="scientific_name">Nome científico</string>
     <string name="notes">Anotações</string>
     <string name="requiredText">Preencha este campo</string>
 
-    <string name="save">Salvar</string>
-    <string name="edit">Editar</string>
+    <!-- popularName -->
+    <string name="add_popular_name">Inserir um novo nome popular</string>
+    <string name="edit_popular_name">Editar nome popular</string>
+    <string name="popular_name">Nome popular</string>
+    <string name="insert_popular_name">Nome popular inserido com sucesso</string>
+    <string name="delete_popular_name">Nome popular removido com sucesso</string>
+    <string name="update_popular_name">Nome popular atualizado com sucesso</string>
+    <string name="message_delete_popular_name">Deseja realmente remover o nome popular?</string>
 
-    <string name="saveNewSpecies">Espécie cadastrada com sucesso</string>
 
-    <string name="unauthorized_access">Acesso não autorizado !</string>
+    <!-- editPassword -->
+    <string name="edit_password_title">Editar senha de acesso</string>
+    <string name="write_password">Insira uma senha</string>
+    <string name="re_write_password">Repita a senha</string>
+    <string name="requiredPasword">Insira uma senha com no mínimo 6 caracteres</string>
+    <string name="differentPassword">As senhas devem ser as mesmas</string>
+    <string name="change_password">A senha foi alterada com sucesso</string>
 
-    <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ws_error">Erro. Informe o administrador sobre este erro</string>
+
+    <string name="dev">Em desenvolvimento</string>
+    <string name="fail">A operação falhou. Tente novamente mais tarde.</string>
+
+
+    <string name="about_text">
+
+    Versão 1.0.0 \n23/07/2018\n\nBioBirding é um aplicativo móvel que contribui com
+    o trabalho de biólogos engajados na preservação de espécies da avifauna brasileira
+    que estejam em risco de extinção e na conservação do meio ambiente, fornecendo
+    locais relevantes onde seja necessária a criação de uma APA (Área de Proteção
+    Ambiental).\n\nOs dados coletados contribuirão para estudos sobre o comportamento das
+    aves, deslocamento latitudinal e longitudinal de aves migratórias em um período
+    de tempo e a quantidade de indivíduos de uma determinada espécie em uma
+    localização específica.
+
+    </string>
+
 
 </resources>
