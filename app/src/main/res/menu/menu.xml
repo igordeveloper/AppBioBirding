@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/editAccount"
-        android:title="@string/editAccount"/>
+        android:id="@+id/editPassword"
+        android:title="@string/edit_password"/>
     <item
         android:id="@+id/loggof"
         android:title="@string/logoff" />
