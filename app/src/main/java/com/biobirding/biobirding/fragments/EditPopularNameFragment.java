@@ -1,18 +1,18 @@
 package com.biobirding.biobirding.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,10 +20,11 @@ import android.widget.TextView;
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.entity.PopularName;
 import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.threads.DeletePopularNameThread;
-import com.biobirding.biobirding.threads.InsertPopularNameThread;
-import com.biobirding.biobirding.threads.UpdatePopularNameThread;
-import com.biobirding.biobirding.threads.UpdateSpecieThread;
+import com.biobirding.biobirding.webservice.PopularNameCall;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 public class EditPopularNameFragment extends Fragment {
 
@@ -31,6 +32,8 @@ public class EditPopularNameFragment extends Fragment {
     private Button editPopularName;
     private Species species;
     private PopularName popularName;
+    private Handler handler = new Handler();
+    private Context context;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class EditPopularNameFragment extends Fragment {
             this.popularName = (PopularName) bundle.getSerializable("popularName");
         }
 
+        this.context = getContext();
 
         TextView scientificName = view.findViewById(R.id.scientific_name);
         scientificName.setText(species.getScientificName());
@@ -50,64 +54,59 @@ public class EditPopularNameFragment extends Fragment {
         deletePopularName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(getContext() != null){
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setMessage(R.string.message_delete_popular_name);
-                    alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Handler handler = new Handler(new Handler.Callback() {
-                                @Override
-                                public boolean handleMessage(Message msg) {
-                                    Object response = msg.obj;
 
-                                    if(getContext() != null){
-                                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                                        if(response.getClass() == String.class ){
-                                            alert.setMessage((String)response);
-                                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    editPopularName.setEnabled(true);
-                                                }
-                                            });
-                                            alert.show();
-                                        }
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setMessage(R.string.message_delete_popular_name);
+                alert.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
 
-                                        if(response.getClass() == Boolean.class ){
-                                            alert.setMessage(R.string.delete_popular_name);
-                                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    redirectActivity();
-                                                }
-                                            });
-                                            alert.show();
-                                        }
-                                        return true;
-                                    }
-                                    return false;
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                PopularNameCall popularNameCall = new PopularNameCall();
+                                try {
+                                    popularNameCall.delete(popularName);
+                                } catch (InterruptedException | IOException | JSONException e) {
+                                    e.printStackTrace();
                                 }
-                            });
 
-                            DeletePopularNameThread deletePopularNameThread = new DeletePopularNameThread(handler, popularName);
-                            deletePopularNameThread.start();
-                        }
-                    });
-                    alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        redirectActivity();
+                                    }
+                                });
+                            }
+                        }).start();
+                    }
+                });
 
-                        }
-                    });
-                    alert.show();
-                }
+                alert.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alert.show();
             }
+
         });
 
 
         this.popularNameText = view.findViewById(R.id.popular_name);
         this.popularNameText.setText(popularName.getName());
+        this.popularNameText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus && getActivity()!= null){
+                    InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    if(inputMethodManager != null){
+                        inputMethodManager.hideSoftInputFromWindow(popularNameText.getWindowToken(), 0);
+                    }
+                }
+            }
+        });
 
         this.editPopularName = view.findViewById(R.id.edit_popular_name);
         this.editPopularName.setOnClickListener(new View.OnClickListener() {
@@ -115,45 +114,53 @@ public class EditPopularNameFragment extends Fragment {
             public void onClick(View v) {
                 if(validateFields()) {
 
-                    Handler handler = new Handler(new Handler.Callback() {
+                    new Thread(new Runnable() {
+
+                        String exception = null;
+                        Boolean response = false;
+
                         @Override
-                        public boolean handleMessage(Message msg) {
-                            Object response = msg.obj;
+                        public void run() {
 
-                            if(getContext() != null){
-                                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                            PopularNameCall popularNameCall = new PopularNameCall();
+                            try {
+                                response = popularNameCall.update(popularName, popularNameText.getText().toString());
+                            } catch (InterruptedException | IOException | JSONException e) {
+                                exception = e.getMessage();
+                            }
 
-                                if(response.getClass() == String.class ){
-                                    alert.setMessage((String)response);
-                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                                    if(exception == null){
+                                        if(response){
+                                            alert.setMessage(R.string.update_popular_name);
+                                        }else{
+                                            alert.setMessage(R.string.fail);
                                             editPopularName.setEnabled(true);
                                         }
-                                    });
-                                    alert.show();
-                                }
+                                    }else{
+                                        alert.setMessage(exception);
+                                        editPopularName.setEnabled(true);
+                                    }
 
-                                if(response.getClass() == Boolean.class ){
-                                    alert.setMessage(R.string.update_popular_name);
                                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
-                                            redirectActivity();
+                                            if(response){
+                                                redirectActivity();
+                                            }
                                         }
                                     });
+
                                     alert.show();
                                 }
-                                return true;
-                            }
-                            return false;
+                            });
                         }
+                    }).start();
 
-                    });
-
-                    UpdatePopularNameThread updatePopularNameThread;
-                    updatePopularNameThread = new UpdatePopularNameThread(handler, popularName, popularNameText.getText().toString());
-                    updatePopularNameThread.start();
                 }
             }
         });

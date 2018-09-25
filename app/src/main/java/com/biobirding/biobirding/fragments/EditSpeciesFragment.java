@@ -1,9 +1,9 @@
 package com.biobirding.biobirding.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,8 +19,11 @@ import android.widget.Spinner;
 
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.threads.SelectSpeciesThread;
-import com.biobirding.biobirding.threads.UpdateSpecieThread;
+import com.biobirding.biobirding.webservice.SpeciesCall;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 
 public class EditSpeciesFragment extends Fragment {
@@ -29,7 +32,9 @@ public class EditSpeciesFragment extends Fragment {
     private EditText scientificName;
     private EditText notes;
     private Spinner spinner;
-    private Boolean response;
+    private Handler handler = new Handler();
+    private Context context;
+    private Button editSpecies;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -39,6 +44,8 @@ public class EditSpeciesFragment extends Fragment {
         this.scientificName = view.findViewById(R.id.scientific_name);
         this.notes = view.findViewById(R.id.notes);
         this.spinner = view.findViewById(R.id.conservationStateList);
+
+        this.context = getContext();
 
         if (getContext() != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -58,27 +65,115 @@ public class EditSpeciesFragment extends Fragment {
 
 
         /* Edit button */
-        Button editSpecies = view.findViewById(R.id.editSpecies);
+        editSpecies = view.findViewById(R.id.editSpecies);
         editSpecies.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                editSpecies.setEnabled(false);
+
                 if (validateFields()) {
 
-                    Handler handler = new Handler(new Handler.Callback() {
+
+                    new Thread(new Runnable() {
+
+                        String exception;
+                        Boolean response;
+
                         @Override
-                        public boolean handleMessage(Message msg) {
-                            Object response = msg.obj;
+                        public void run() {
 
-                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-
-                            if(response.getClass() == String.class ){
-                                alert.setMessage((String)response);
-                                alert.show();
+                            String conservationState = "";
+                            if (spinner.getSelectedItemId() != 0) {
+                                conservationState = spinner.getSelectedItem().toString();
                             }
 
-                            if(response.getClass() == Boolean.class ){
-                                alert.setMessage(R.string.update_species);
+                            species.setScientificName(scientificName.getText().toString());
+                            species.setNotes(notes.getText().toString());
+                            species.setConservationState(conservationState);
+
+                            SpeciesCall speciesCall = new SpeciesCall();
+                            try {
+                                response = speciesCall.update(species);
+                            } catch (InterruptedException | IOException | JSONException e) {
+                                exception = e.getMessage();
+                            }
+
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                                    if(exception == null){
+                                        if(response){
+                                            alert.setMessage(R.string.update_species);
+                                        }else{
+                                            alert.setMessage(R.string.fail);
+                                            editSpecies.setEnabled(true);
+                                        }
+                                    }else{
+                                        alert.setMessage(exception);
+                                        editSpecies.setEnabled(true);
+                                    }
+
+                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if(response){
+                                                redirectActivity();
+                                            }
+                                        }
+                                    });
+
+                                    alert.show();
+                                }
+                            });
+
+                        }
+                    }).start();
+
+
+
+                }
+            }
+        });
+
+
+
+        new Thread(new Runnable() {
+
+            String exception;
+            Species speciesReponse;
+
+            @Override
+            public void run() {
+
+                final SpeciesCall speciesCall = new SpeciesCall();
+                try {
+                    speciesReponse = speciesCall.select(species);
+                } catch (InterruptedException | IOException | JSONException e) {
+                    exception = e.getMessage();
+                }
+
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                        if(exception == null){
+                            if(species.getScientificName().equals(speciesReponse.getScientificName())){
+                                notes.setText(speciesReponse.getNotes());
+                                if(!speciesReponse.getConservationState().equals("null")){
+                                    for (int i = 0; i < spinner.getCount(); i++) {
+                                        if (spinner.getItemAtPosition(i).equals(speciesReponse.getConservationState())) {
+                                            spinner.setSelection(i);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }else{
+                                alert.setMessage(R.string.fail);
                                 alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -86,65 +181,25 @@ public class EditSpeciesFragment extends Fragment {
                                     }
                                 });
                                 alert.show();
+
                             }
-                            return true;
+                        }else{
+                            alert.setMessage(exception);
+                            alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    redirectActivity();
+                                }
+                            });
+                            alert.show();
                         }
-                    });
 
-                    String conservationState = "";
-                    if (spinner.getSelectedItemId() != 0) {
-                        conservationState = spinner.getSelectedItem().toString();
+
+
                     }
-
-                    species.setScientificName(scientificName.getText().toString());
-                    species.setNotes(notes.getText().toString());
-                    species.setConservationState(conservationState);
-
-                    UpdateSpecieThread updateSpecieThread = new UpdateSpecieThread(handler, species);
-                    updateSpecieThread.start();
-
-                }
-
+                });
             }
-        });
-
-
-        /* Search specie*/
-        Handler handler = new Handler(new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                Object response = msg.obj;
-
-                if(response.getClass() == String.class ){
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setMessage((String)response);
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            redirectActivity();
-                        }
-                    });
-                    alert.show();
-                }
-
-                if(response.getClass() == Species.class ){
-                    Species species = (Species) msg.obj;
-                    notes.setText(species.getNotes());
-                    if(!species.getConservationState().equals("null")){
-                        for (int i = 0; i < spinner.getCount(); i++) {
-                            if (spinner.getItemAtPosition(i).equals(species.getConservationState())) {
-                                spinner.setSelection(i);
-                                break;
-                            }
-                        }
-                    }
-                }
-                return true;
-            }
-        });
-
-        SelectSpeciesThread selectSpeciesThread = new SelectSpeciesThread(handler, species);
-        selectSpeciesThread.start();
+        }).start();
 
         return view;
 
@@ -162,6 +217,7 @@ public class EditSpeciesFragment extends Fragment {
     public boolean validateFields(){
         if(TextUtils.isEmpty(scientificName.getText().toString())){
             scientificName.setError(getString(R.string.requiredText));
+            editSpecies.setEnabled(true);
             return false;
         }
         return true;

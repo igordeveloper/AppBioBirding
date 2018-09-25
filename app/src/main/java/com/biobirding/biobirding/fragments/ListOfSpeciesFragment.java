@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +22,11 @@ import android.widget.ListView;
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.customAdapters.SpeciesAdapter;
 import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.threads.SearchSpeciesThread;
+import com.biobirding.biobirding.webservice.SpeciesCall;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ListOfSpeciesFragment extends Fragment {
@@ -32,6 +35,7 @@ public class ListOfSpeciesFragment extends Fragment {
     private ArrayList<Species> speciesList;
     private SpeciesAdapter adapter;
     private EditText txtSearch;
+    private Handler handler = new Handler();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -105,33 +109,35 @@ public class ListOfSpeciesFragment extends Fragment {
         return view;
     }
 
-    @SuppressWarnings("unchecked")
-    public void searchItem(String search){
+    public void searchItem(final String search){
 
-        Handler handler = new Handler(new Handler.Callback() {
+        new Thread(new Runnable() {
+
+            ArrayList<Species> response;
+
             @Override
-            public boolean handleMessage(Message msg) {
+            public void run() {
 
-                Object response = msg.obj;
 
-                if(response.getClass() == String.class && getContext() != null){
-                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                    alert.setMessage((String)response);
-                    alert.show();
+                SpeciesCall speciesCall = new SpeciesCall();
+                try {
+                    response = speciesCall.search(search);
+                } catch (InterruptedException | IOException | JSONException e) {
+                    e.printStackTrace();
                 }
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d("-------size", String.valueOf(response.size()));
 
-                if(response.getClass() == ArrayList.class ){
-                    ArrayList<Species> species = (ArrayList<Species>) msg.obj;
-                    speciesList.clear();
-                    speciesList.addAll(species);
-                    adapter.notifyDataSetChanged();
-                }
-                return true;
+                        speciesList.clear();
+                        speciesList.addAll(response);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
-        });
+        }).start();
 
-        SearchSpeciesThread searchSpeciesThread = new SearchSpeciesThread(handler, search);
-        searchSpeciesThread.start();
     }
 
     public void initList(Context context){

@@ -1,9 +1,9 @@
 package com.biobirding.biobirding.fragments;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,7 +19,11 @@ import android.widget.Spinner;
 
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.threads.InsertSpecieThread;
+import com.biobirding.biobirding.webservice.SpeciesCall;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 public class InsertSpeciesFragment extends Fragment {
 
@@ -27,11 +31,14 @@ public class InsertSpeciesFragment extends Fragment {
     private EditText notes;
     private Spinner spinner;
     private Button addSpecies;
+    private Handler handler = new Handler();
+    private Context context;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_add_species, container, false);
 
+        this.context = getContext();
         this.spinner = view.findViewById(R.id.conservationStateList);
 
         if (getContext() != null) {
@@ -54,50 +61,69 @@ public class InsertSpeciesFragment extends Fragment {
 
                 if(validateFields()) {
 
-                    Handler handler = new Handler(new Handler.Callback() {
+                    new Thread(new Runnable() {
+
+                        String exception = null;
+                        Boolean response = false;
+
                         @Override
-                        public boolean handleMessage(Message msg) {
-                            Object response = msg.obj;
+                        public void run() {
 
-                            AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                            String conservationState = "";
+                            if(spinner.getSelectedItemId() != 0){
+                                conservationState = spinner.getSelectedItem().toString();
+                            }
 
-                            if(response.getClass() == String.class ){
-                                alert.setMessage((String)response);
-                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                            Species species = new Species();
+                            species.setScientificName(scientificName.getText().toString());
+                            species.setNotes(notes.getText().toString());
+                            species.setConservationState(conservationState);
+
+                            SpeciesCall speciesCall = new SpeciesCall();
+                            try {
+                                response = speciesCall.insert(species);
+                            } catch (InterruptedException | IOException | JSONException e) {
+                                exception = e.getMessage();
+                            }
+
+
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                                    if(exception == null){
+                                        if(response){
+                                            alert.setMessage(R.string.insert_species);
+                                        }else{
+                                            alert.setMessage(R.string.fail);
+                                            addSpecies.setEnabled(true);
+                                        }
+                                    }else{
+                                        alert.setMessage(exception);
                                         addSpecies.setEnabled(true);
                                     }
-                                });
-                                alert.show();
-                            }
 
-                            if(response.getClass() == Boolean.class ){
-                                alert.setMessage(R.string.insert_species);
-                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        redirectActivity();
-                                    }
-                                });
-                                alert.show();
-                            }
-                            return true;
+                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if(response){
+                                                redirectActivity();
+                                            }
+                                        }
+                                    });
+
+                                    alert.show();
+
+                                }
+                            });
+
                         }
-                    });
+                    }).start();
 
-                    String conservationState = "";
-                    if(spinner.getSelectedItemId() != 0){
-                        conservationState = spinner.getSelectedItem().toString();
-                    }
 
-                    Species species = new Species();
-                    species.setScientificName(scientificName.getText().toString());
-                    species.setNotes(notes.getText().toString());
-                    species.setConservationState(conservationState);
 
-                    InsertSpecieThread insertSpecieThread = new InsertSpecieThread(handler, species);
-                    insertSpecieThread.start();
                 }
             }
         });
@@ -114,10 +140,10 @@ public class InsertSpeciesFragment extends Fragment {
         }
     }
 
-
     public boolean validateFields(){
         if(TextUtils.isEmpty(scientificName.getText().toString())){
             scientificName.setError(getString(R.string.requiredText));
+            addSpecies.setEnabled(true);
             return false;
         }
 
