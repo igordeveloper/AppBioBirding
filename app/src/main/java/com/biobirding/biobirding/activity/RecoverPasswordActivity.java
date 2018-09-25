@@ -1,9 +1,10 @@
 package com.biobirding.biobirding.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Handler;
-import android.os.Message;
+
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,20 +13,24 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.biobirding.biobirding.R;
-import com.biobirding.biobirding.entity.User;
-import com.biobirding.biobirding.threads.RecoverPasswordThread;
+import com.biobirding.biobirding.webservice.LoginCall;
+
+import org.json.JSONException;
+
+import java.io.IOException;
 
 public class RecoverPasswordActivity extends AppCompatActivity {
 
     private EditText email;
-    private Boolean response;
+    private Context context;
+    private Handler handler = new Handler();
 
     protected void onCreate(Bundle savedInstanceState) {
 
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recover_password);
+
+        this.context = this;
 
         this.email = findViewById(R.id.email);
 
@@ -36,39 +41,52 @@ public class RecoverPasswordActivity extends AppCompatActivity {
 
                 view.getContext();
 
-                Handler handler = new Handler(new Handler.Callback() {
+                new Thread(new Runnable() {
+
+                    String exception = null;
+                    Boolean response = false;
+
                     @Override
-                    public boolean handleMessage(Message msg) {
-                    response = (Boolean) msg.obj;
-                    AlertDialog.Builder alert = new AlertDialog.Builder(RecoverPasswordActivity.this);
-
-                    if(response){
-                        alert.setMessage(R.string.send_email);
-                    }else{
-                        alert.setMessage(R.string.not_found_email);
-                    }
-
-                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if(response){
-                                startActivity(new Intent(RecoverPasswordActivity.this, LoginActivity.class));
-                            }
+                    public void run() {
+                        LoginCall loginCall = new LoginCall();
+                        try {
+                            response = loginCall.recoverPassword(email.getText().toString());
+                        } catch (IOException | JSONException | InterruptedException e) {
+                            exception = e.getMessage();
                         }
-                    });
 
-                    alert.show();
-                    return true;
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                                if(exception == null){
+                                    if(response){
+                                        alert.setMessage(R.string.send_email);
+                                    }else{
+                                        alert.setMessage(R.string.not_found_email);
+                                    }
+                                }else{
+                                    alert.setMessage(exception);
+                                }
+
+                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        if(response){
+                                            startActivity(new Intent(RecoverPasswordActivity.this, LoginActivity.class));
+                                        }
+                                    }
+                                });
+
+                                alert.show();
+                            }
+                        });
                     }
-                });
-
-                User user = new User();
-                user.setEmail(email.getText().toString());
-                RecoverPasswordThread newPasswordThread = new RecoverPasswordThread(handler, user);
-                newPasswordThread.start();
+                }).start();
 
             }
         });
-
     }
 }

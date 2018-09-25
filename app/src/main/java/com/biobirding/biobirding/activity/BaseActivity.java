@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +23,8 @@ public class BaseActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
         boolean authenticate = sharedPref.getBoolean("authenticate_bio", false);
         this.accessLevel = sharedPref.getInt("access_level", 0);
+
+        Log.d("------password", sharedPref.getString("password_bio", ""));
 
         if(!authenticate){
             startActivity(new Intent(BaseActivity.this, LoginActivity.class));
@@ -43,8 +46,8 @@ public class BaseActivity extends AppCompatActivity {
                 startActivity(new Intent(BaseActivity.this, AboutActivity.class));
                 return true;
 
-            case R.id.editAccount:
-                CustomSnackBar.make(getWindow().getDecorView(), getResources().getString(R.string.dev));
+            case R.id.editPassword:
+                startActivity(new Intent(BaseActivity.this, ChangePasswordActivity.class));
                 return true;
 
             case R.id.loggof:

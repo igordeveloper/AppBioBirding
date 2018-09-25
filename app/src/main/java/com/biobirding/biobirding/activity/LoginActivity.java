@@ -5,24 +5,28 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import java.io.UnsupportedEncodingException;
+
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.entity.User;
-import com.biobirding.biobirding.threads.LoginThread;
-import com.biobirding.biobirding.utils.HashPassword;
+import com.biobirding.biobirding.helper.HashPassword;
+import com.biobirding.biobirding.webservice.LoginCall;
+
+import org.json.JSONException;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private Handler handler = new Handler();
     private EditText nickname;
     private EditText password;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,40 +55,43 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Handler handler = new Handler(new Handler.Callback() {
-                    @Override
-                    @SuppressWarnings("unchecked")
-                    public boolean handleMessage(Message msg) {
-                        User user = (User) msg.obj;
+                new Thread(new Runnable() {
 
-                        if(user.getAccessLevel() > 0){
-                            SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPref.edit();
-                            editor.putString("nickname_bio", user.getNickname());
-                            editor.putString("password_bio", user.getPassword());
-                            editor.putBoolean("authenticate_bio", true);
-                            editor.putInt("access_level", user.getAccessLevel());
-                            editor.apply();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                        }else{
-                            notAuthorized();
+                    LoginCall loginCall = new LoginCall();
+                    String hashPassword;
+
+
+                    @Override
+                    public void run() {
+                        try {
+                            hashPassword = HashPassword.encode256(password.getText().toString());
+                            user = loginCall.validate(nickname.getText().toString(), hashPassword);
+                        } catch (IOException | JSONException | InterruptedException | NoSuchAlgorithmException e) {
+                            e.printStackTrace();
                         }
 
-                        return true;
-                    }
-                });
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(user != null){
+                                    SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor = sharedPref.edit();
+                                    editor.putString("nickname_bio", user.getNickname());
+                                    editor.putString("password_bio", hashPassword);
+                                    editor.putString("rg_bio", user.getRg());
+                                    editor.putBoolean("authenticate_bio", true);
+                                    editor.putInt("access_level", user.getAccessLevel());
+                                    editor.apply();
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                }else{
+                                    notAuthorized();
+                                }
+                            }
+                        });
 
-                try {
-                    HashPassword hash = new HashPassword();
-                    User user = new User();
-                    user.setAccessLevel(0);
-                    user.setNickname(nickname.getText().toString());
-                    user.setPassword(hash.encode256(password.getText().toString()));
-                    LoginThread loginThread = new LoginThread(handler, user);
-                    loginThread.start();
-                } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                    }
+
+                }).start();
             }
         });
 
