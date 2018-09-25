@@ -8,10 +8,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
-import android.view.LayoutInflater;
+
 import android.widget.TextView;
 
-import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.entity.Species;
 
 public class SpeciesAdapter extends BaseAdapter{

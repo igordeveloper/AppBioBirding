@@ -9,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.biobirding.biobirding.entity.PopularName;
-import com.biobirding.biobirding.entity.Species;
 
 import java.util.ArrayList;
 
