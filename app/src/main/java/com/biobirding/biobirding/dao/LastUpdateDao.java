@@ -4,15 +4,18 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
-import com.biobirding.biobirding.entity.PopularName;
+import com.biobirding.biobirding.entity.LastUpdate;
+import com.biobirding.biobirding.entity.Species;
 
 import java.util.List;
 
 @Dao
-public interface PopularNameDao {
-    @Query("SELECT * FROM popular_name")
-    List<PopularName> getAll();
+public interface LastUpdateDao {
+
+    @Query("SELECT * FROM last_update ORDER BY timestamp DESC LIMIT 1")
+    List<LastUpdate> getAll();
 
     @Insert
-    void insert(PopularName popularName);
+    void insert(LastUpdate lastUpdate);
+
 }

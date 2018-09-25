@@ -5,15 +5,18 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
 import com.biobirding.biobirding.entity.PopularName;
-import com.biobirding.biobirding.entity.Species;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Dao
 public interface PopularNameDao {
-    @Query("SELECT * FROM popular_name")
+    @Query("SELECT *FROM popular_name")
     List<PopularName> getAll();
 
     @Insert
     void insert(PopularName popularName);
+
+    @Query("DELETE FROM popular_name")
+    void deleteAll();
 }
