@@ -1,5 +1,5 @@
 package com.biobirding.biobirding.dao;
-
+/*
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
@@ -19,4 +19,4 @@ public interface PopularNameDao {
 
     @Query("DELETE FROM popular_name")
     void deleteAll();
-}
+}*/
