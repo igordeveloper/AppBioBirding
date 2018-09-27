@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,9 @@ import com.biobirding.biobirding.helper.CustomSnackBar;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MainActivity extends BaseActivity {
 
@@ -30,25 +34,20 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        requestPermission();
+
         if(getSupportActionBar() !=null){
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
 
-
         alarmMgr = (AlarmManager)getApplicationContext().getSystemService(getApplicationContext().ALARM_SERVICE);
         Intent i = new Intent(getApplicationContext(), BackupReceiver.class);
         alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, i, 0);
-
-        // Set the alarm to start at 8:30 a.m.
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, 22);
-        calendar.set(Calendar.MINUTE, 50);
-
-        // setRepeating() lets you specify a precise custom interval--in this case,
-        // 20 minutes.
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                100 * 60 * 1, alarmIntent);
+        calendar.set(Calendar.HOUR_OF_DAY, new Random().nextInt(23));
+        calendar.set(Calendar.MINUTE, new Random().nextInt(59));
 
 
         /*New register button*/
@@ -57,7 +56,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
 
-                startActivity(new Intent(MainActivity.this, NewRegisterActivity.class));
+                startActivity(new Intent(MainActivity.this, CatalogActivity.class));
 
 
             }
@@ -92,5 +91,9 @@ public class MainActivity extends BaseActivity {
                 }
             }
         }).start();
+    }
+
+    private void requestPermission(){
+        ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION}, 1 );
     }
 }
