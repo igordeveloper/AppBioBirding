@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.biobirding.biobirding">
 
+    <uses-sdk android:minSdkVersion="21"/>
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -32,8 +34,9 @@
         <activity android:name=".activity.LogoffActivity" />
         <activity android:name=".activity.SpeciesActivity" />
         <activity android:name=".activity.PopularNameActivity" />
-        <activity android:name=".activity.CatalogActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.CatalogActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.RecoverPasswordActivity"
             android:noHistory="true"
@@ -42,8 +45,27 @@
             android:name=".activity.UpdateSpeciesActivity"
             android:noHistory="true" />
 
+        <receiver android:name=".CatalogReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".SpeciesUpdateReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Will not be called unless the application explicitly enables it -->
         <receiver
-            android:name=".BackupReceiver"
+            android:name=".SpeciesBootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".CatalogBootReceiver"
             android:enabled="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -51,8 +73,12 @@
         </receiver>
 
         <activity android:name=".activity.AboutActivity" />
-        <activity android:name=".activity.ChangePasswordActivity"
-            android:noHistory="true"></activity>
+        <activity
+            android:name=".activity.ChangePasswordActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".activity.ReportActivity"
+            android:noHistory="true"/>
     </application>
 
 </manifest>
