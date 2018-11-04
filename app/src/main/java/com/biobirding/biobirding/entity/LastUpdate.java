@@ -2,9 +2,9 @@ package com.biobirding.biobirding.entity;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.util.Log;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 @Entity(tableName = "last_update")
 public class LastUpdate implements Serializable {

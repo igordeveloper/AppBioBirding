@@ -8,15 +8,11 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
-@Entity(tableName = "popular_name",
-        primaryKeys = {"name", "id"},
-        foreignKeys = @ForeignKey(entity = Species.class,
-        parentColumns = "id",
-        childColumns = "id"),
-        indices = {@Index("id")}
+@Entity(tableName = "popular_names",
+        primaryKeys = {"name", "id", "scientific_name"}
 )
 
-public class PopularName implements Serializable{
+public class LocalSpecies implements Serializable{
 
     @NonNull
     @ColumnInfo(name = "name")
@@ -25,6 +21,10 @@ public class PopularName implements Serializable{
     @NonNull
     @ColumnInfo(name = "id")
     private Integer id;
+
+    @NonNull
+    @ColumnInfo(name = "scientific_name")
+    private String scientificName;
 
     @NonNull
     public String getName() {
@@ -42,5 +42,14 @@ public class PopularName implements Serializable{
 
     public void setId(@NonNull Integer id) {
         this.id = id;
+    }
+
+    @NonNull
+    public String getScientificName() {
+        return scientificName;
+    }
+
+    public void setScientificName(@NonNull String scientificName) {
+        this.scientificName = scientificName;
     }
 }

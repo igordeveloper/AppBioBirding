@@ -1,28 +1,112 @@
 package com.biobirding.biobirding.entity;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
-public class Species implements Serializable {
+@Entity(tableName = "catalog")
+public class Catalog implements Serializable {
 
 
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
     private Integer id;
-    private String scientificName;
+
+    @NonNull
+    @ColumnInfo(name = "rg")
+    private String rg;
+
+    @NonNull
+    @ColumnInfo(name = "species")
+    private Integer species;
+
+    @NonNull
+    @ColumnInfo(name = "age")
+    private String age;
+
+    @NonNull
+    @ColumnInfo(name = "sex")
+    private String sex;
+
+    @NonNull
+    @ColumnInfo(name = "latitude")
+    private Double latitude;
+
+    @NonNull
+    @ColumnInfo(name = "longitude")
+    private Double longitude;
+
+    @ColumnInfo(name = "notes")
     private String notes;
-    private String conservationState;
 
-    public Integer getId() {
-        return id;
+    @ColumnInfo(name = "identification_code")
+    private String identificationCode;
+
+    @NonNull
+    @ColumnInfo(name = "timestamp")
+    private Long timestamp;
+
+    public Integer getId() { return id;}
+
+    public void setId(Integer id) { this.id = id; }
+
+    public Long getTimestamp() {
+        return timestamp;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public String getScientificName() {
-        return scientificName;
+    public String getRg() {
+        return rg;
     }
 
-    public void setScientificName(String scientificName) {
-        this.scientificName = scientificName;
+    public void setRg(String rg) {
+        this.rg = rg;
+    }
+
+    public Integer getSpecies() {
+        return species;
+    }
+
+    public void setSpecies(Integer species) {
+        this.species = species;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
     public String getNotes() {
@@ -33,12 +117,12 @@ public class Species implements Serializable {
         this.notes = notes;
     }
 
-    public String getConservationState() {
-        return conservationState;
+    public String getIdentificationCode() {
+        return identificationCode;
     }
 
-    public void setConservationState(String conservationState) {
-        this.conservationState = conservationState;
+    public void setIdentificationCode(String identificationCode) {
+        this.identificationCode = identificationCode;
     }
 }
 
