@@ -13,9 +13,12 @@ import java.util.List;
 public interface LastUpdateDao {
 
     @Query("SELECT * FROM last_update ORDER BY timestamp DESC LIMIT 1")
-    List<LastUpdate> getAll();
+    Long getAll();
 
     @Insert
     void insert(LastUpdate lastUpdate);
+
+    @Query("DELETE FROM last_update")
+    void deleteAll();
 
 }
