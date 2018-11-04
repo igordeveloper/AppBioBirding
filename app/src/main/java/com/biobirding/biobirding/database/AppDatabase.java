@@ -4,21 +4,22 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import com.biobirding.biobirding.dao.CatalogDao;
 import com.biobirding.biobirding.dao.LastUpdateDao;
-import com.biobirding.biobirding.dao.PopularNameDao;
+import com.biobirding.biobirding.dao.LocalSpeciesDao;
+import com.biobirding.biobirding.entity.Catalog;
 import com.biobirding.biobirding.entity.LastUpdate;
-import com.biobirding.biobirding.entity.PopularName;
-import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.dao.SpeciesDao;
+import com.biobirding.biobirding.entity.LocalSpecies;
 
-@Database(entities = {Species.class, PopularName.class, LastUpdate.class}, version = 1, exportSchema = false)
+
+@Database(entities = {LocalSpecies.class, LastUpdate.class, Catalog.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
 
-    public abstract SpeciesDao speciesDao();
-    public abstract PopularNameDao popularNameDao();
+    public abstract LocalSpeciesDao localSpeciesDao();
     public abstract LastUpdateDao lastUpdateDao();
+    public abstract CatalogDao catalogDao();
 
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
