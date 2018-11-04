@@ -6,33 +6,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.biobirding.biobirding.entity.LocalSpecies;
+import com.biobirding.biobirding.entity.Species;
 
 import java.util.ArrayList;
 
-import android.widget.TextView;
-
-import com.biobirding.biobirding.entity.Species;
-
-public class SpeciesAdapter extends BaseAdapter{
+public class LocalSpeciesAdapter extends BaseAdapter{
 
     private Activity context;
-    private ArrayList<Species> species;
+    private ArrayList<LocalSpecies> localSpecies;
     private static LayoutInflater inflater;
 
-    public SpeciesAdapter(Activity context, ArrayList<Species> species){
+    public LocalSpeciesAdapter(Activity context, ArrayList<LocalSpecies> localSpecies){
         this.context = context;
-        this.species = species;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.localSpecies = localSpecies;
+        inflater = LayoutInflater.from(context);
     }
 
     @Override
     public int getCount() {
-        return this.species.size();
+        return this.localSpecies.size();
     }
 
     @Override
-    public Species getItem(int position) {
-        return this.species.get(position);
+    public LocalSpecies getItem(int position) {
+        return this.localSpecies.get(position);
     }
 
     @Override
@@ -46,7 +46,8 @@ public class SpeciesAdapter extends BaseAdapter{
 
         view = (view == null) ? inflater.inflate(android.R.layout.simple_list_item_1, null) : view;
         TextView textView = (TextView) view.findViewById(android.R.id.text1);
-        textView.setText(species.get(position).getScientificName());
+        String item = localSpecies.get(position).getScientificName() +"\n"+localSpecies.get(position).getName()+"\n";
+        textView.setText(item);
         return view;
     }
 }
