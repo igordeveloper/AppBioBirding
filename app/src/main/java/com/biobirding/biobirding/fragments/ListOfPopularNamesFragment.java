@@ -90,12 +90,12 @@ public class ListOfPopularNamesFragment extends Fragment {
         });
 
 
-        selectAllNames(species);
+        selectAllNames();
         return view;
     }
 
 
-    public void selectAllNames(final Species species){
+    public void selectAllNames(){
 
         new Thread(new Runnable() {
 

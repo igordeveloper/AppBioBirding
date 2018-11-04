@@ -39,7 +39,7 @@ public class InsertSpeciesFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_add_species, container, false);
 
         this.context = getContext();
-        this.spinner = view.findViewById(R.id.conservationStateList);
+        this.spinner = view.findViewById(R.id.sexLIst);
 
         if (getContext() != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),

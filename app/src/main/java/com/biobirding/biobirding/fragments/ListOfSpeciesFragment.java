@@ -35,6 +35,7 @@ public class ListOfSpeciesFragment extends Fragment {
     private ArrayList<Species> speciesList;
     private SpeciesAdapter adapter;
     private EditText txtSearch;
+    private String search;
     private Handler handler = new Handler();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,7 +97,8 @@ public class ListOfSpeciesFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if(!s.toString().equals("")){
-                    searchItem(s.toString());
+                    search = s.toString();
+                    searchItem();
                 }
             }
 
@@ -109,8 +111,8 @@ public class ListOfSpeciesFragment extends Fragment {
         return view;
     }
 
-    public void searchItem(final String search){
-
+    public void searchItem(){
+        
         new Thread(new Runnable() {
 
             ArrayList<Species> response;
@@ -128,10 +130,10 @@ public class ListOfSpeciesFragment extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.d("-------size", String.valueOf(response.size()));
-
                         speciesList.clear();
-                        speciesList.addAll(response);
+                        if(response != null){
+                            speciesList.addAll(response);
+                        }
                         adapter.notifyDataSetChanged();
                     }
                 });

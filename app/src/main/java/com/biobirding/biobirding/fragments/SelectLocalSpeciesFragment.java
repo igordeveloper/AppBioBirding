@@ -9,7 +9,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -28,26 +28,19 @@ import android.widget.Spinner;
 
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.activity.LogoffActivity;
-import com.biobirding.biobirding.activity.TempGpsActivity;
 import com.biobirding.biobirding.customAdapters.LocalSpeciesAdapter;
-import com.biobirding.biobirding.customAdapters.SpeciesAdapter;
 import com.biobirding.biobirding.database.AppDatabase;
 import com.biobirding.biobirding.entity.LocalSpecies;
-import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.webservice.SpeciesCall;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
-public class NewRegisterFragment extends Fragment {
+public class SelectLocalSpeciesFragment extends Fragment {
 
     private FusedLocationProviderClient client;
     private ListView listView;
@@ -56,62 +49,14 @@ public class NewRegisterFragment extends Fragment {
     private EditText txtSearch;
     private String search;
     private Handler handler = new Handler();
-    private ScrollView scrollView;
-    private Spinner age;
-    private Spinner sex;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_new_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_select_local_species, container, false);
         this.listView = view.findViewById(R.id.speciesListView);
         txtSearch = view.findViewById(R.id.txtSearch);
 
-        this.age = view.findViewById(R.id.ageList);
-        this.sex = view.findViewById(R.id.sexLixt);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.age, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.age.setAdapter(adapter);
-
-        adapter = ArrayAdapter.createFromResource(getContext(),
-                R.array.sex, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        this.sex.setAdapter(adapter);
-
-        if(getActivity()!=null){
-            client = LocationServices.getFusedLocationProviderClient(getActivity());
-            client.flushLocations();
-
-            if (ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                startActivity(new Intent(getActivity(), LogoffActivity.class));
-            }else{
-                client.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-
-                            Log.d("latitude", String.valueOf(location.getLatitude()));
-                            Log.d("longitude", String.valueOf(location.getLongitude()));
-
-                            //TextView latitude = findViewById(R.id.latitude);
-                            //TextView longitude = findViewById(R.id.longitude);
-
-                            //latitude.setText(String.valueOf(location.getLatitude()));
-                            //longitude.setText(String.valueOf(location.getLongitude()));
-
-                            //requestWeather(location.getLatitude(), location.getLongitude());
-                        }
-                    }
-                });
-            }
-
-        }
-
-
         initList(getContext());
-
-
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -120,7 +65,7 @@ public class NewRegisterFragment extends Fragment {
                 listView.setVisibility(View.INVISIBLE);
 
                 //Hide keyboard
-                /*if(getActivity() != null){
+                if(getActivity() != null){
                     InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                     if(inputMethodManager != null){
                         inputMethodManager.hideSoftInputFromWindow(txtSearch.getWindowToken(), 0);
@@ -128,19 +73,19 @@ public class NewRegisterFragment extends Fragment {
                 }
 
                 //Receive specie object
-                Species species = (Species) parent.getAdapter().getItem(position);
+                LocalSpecies localSpecies = (LocalSpecies) parent.getAdapter().getItem(position);
 
                 //Change to InfoSpeciesFragment
-                InfoSpeciesFragment infoSpeciesFragment = new InfoSpeciesFragment();
+                InsertCatalogFragment insertCatalogFragment = new InsertCatalogFragment();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("species", species);
-                infoSpeciesFragment.setArguments(bundle);
+                bundle.putSerializable("localSpecies", localSpecies);
+                insertCatalogFragment.setArguments(bundle);
 
                 if(getFragmentManager() != null) {
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, infoSpeciesFragment);
+                    transaction.replace(R.id.fragment_container, insertCatalogFragment);
                     transaction.commit();
-                }*/
+                }
             }
         });
 
@@ -183,7 +128,6 @@ public class NewRegisterFragment extends Fragment {
                 Log.d("---", search);
                 response = database.localSpeciesDao().search(search);
 
-                Log.d(">>>>>>>>", String.valueOf(response.size()));
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

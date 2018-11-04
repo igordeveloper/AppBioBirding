@@ -43,7 +43,7 @@ public class EditSpeciesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_species, container, false);
         this.scientificName = view.findViewById(R.id.scientific_name);
         this.notes = view.findViewById(R.id.notes);
-        this.spinner = view.findViewById(R.id.conservationStateList);
+        this.spinner = view.findViewById(R.id.sexLIst);
 
         this.context = getContext();
 

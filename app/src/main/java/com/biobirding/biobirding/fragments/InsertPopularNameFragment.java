@@ -36,6 +36,8 @@ public class InsertPopularNameFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
         final View view = inflater.inflate(R.layout.fragment_add_popular_name, container, false);
 
         if (getArguments() != null) {
@@ -67,8 +69,8 @@ public class InsertPopularNameFragment extends Fragment {
                 inputMethodManager.hideSoftInputFromWindow(popularName.getWindowToken(), 0);
             }
         }
-        scientificName.setText(species.getScientificName());
 
+        scientificName.setText(species.getScientificName());
         addPopularName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
