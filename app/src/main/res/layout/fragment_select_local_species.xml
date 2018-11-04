@@ -19,4 +19,5 @@
         android:layout_height="match_parent"
         android:id="@+id/speciesListView"
         android:layout_marginTop="50dp"/>
+
 </RelativeLayout>
