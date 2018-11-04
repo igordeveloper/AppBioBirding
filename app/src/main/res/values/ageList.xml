@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="items">
-        <item>Estado de conservação</item>
-        <item>Pouco Preocupante</item>
-        <item>Quase ameaçada</item>
-        <item>Vulnerável</item>
-        <item>Em Perigo</item>
-        <item>Em Perigo Crítico</item>
-        <item>Extinto na Natureza</item>
-        <item>Extinto</item>
+    <string-array name="age">
+        <item>Indeterminado</item>
+        <item>Filhote</item>
+        <item>Jovem</item>
+        <item>Adulto</item>
     </string-array>
 </resources>

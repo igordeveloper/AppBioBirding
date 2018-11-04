@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="items">
+    <string-array name="sex">
         <item>Indeterminado</item>
-        <item>Filhote</item>
-        <item>Jovem</item>
-        <item>Adulto</item>
+        <item>Macho</item>
+        <item>Fêmea</item>
     </string-array>
 </resources>

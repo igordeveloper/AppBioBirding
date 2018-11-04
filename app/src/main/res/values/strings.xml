@@ -22,7 +22,7 @@
     <string name="button_register">Inserir novo registro</string>
     <string name="button_species">Gerenciar espécies</string>
     <string name="button_search">Pesquisar registros</string>
-    <string name="button_statistic">Estatísticas</string>
+    <string name="button_statistic">Relatórios</string>
     <string name="button_edit_species">Editar Espécie</string>
     <string name="button_popular_names">Gerenciar nomes populares</string>
 
@@ -30,6 +30,7 @@
     <string name="save">Salvar</string>
     <string name="edit">Editar</string>
     <string name="update">Atualizar</string>
+    <string name="insert">Catalogar ave</string>
 
     <string name="unauthorized_access">Acesso não autorizado !</string>
     <string name="action_settings">Settings</string>
@@ -52,6 +53,7 @@
     <string name="scientific_name">Nome científico</string>
     <string name="notes">Anotações</string>
     <string name="requiredText">Preencha este campo</string>
+    <string name="searchSpecies">Pesquisar nome da ave avistada</string>
 
     <!-- popularName -->
     <string name="add_popular_name">Inserir um novo nome popular</string>
@@ -76,6 +78,31 @@
 
     <string name="dev">Em desenvolvimento</string>
     <string name="fail">A operação falhou. Tente novamente mais tarde.</string>
+
+
+    <string name="sex">Sexo</string>
+    <string name="age">Idade</string>
+    <string name="identification_code">Código de identificação</string>
+
+    <string name="location_disable">A localização do dispositivo esta desativada. Clique em OK para ativar.</string>
+    <string name="no_location">A localização automática não foi obtida. Clique em AGUARDAR para que o GPS obtenha a localização ou clique em ENVIAR para informar as coordenadas manualmente. </string>
+
+    <string name="wait">AGUARDAR</string>
+    <string name="send">ENVIAR</string>
+    <string name="latitude">Latitude ex: -23.1786101</string>
+    <string name="longitude">Longitude ex: -46.7682101</string>
+    <string name="title_no_gps">Informe as coordenadas para finalizar o registro.</string>
+    <string name="coordinate_error">Coordenada inválida</string>
+
+    <string name="report">Relatório</string>
+    <string name="msg_report_a">
+        Escolha uma data inicial para gerar um relatório de avistamentos.
+        O período máximo para gerar um  relatório é de um ano. O relatório será enviado por e-mail.</string>
+
+    <string name="start_date">Data inicial</string>
+    <string name="finish_date">Data final</string>
+    <string name="send_report">O relatório solicitado foi enviado para o seu endereço de email.</string>
+    <string name="no_report">Não há registros para o intervalo de data informado.</string>
 
 
     <string name="about_text">
