@@ -2,6 +2,7 @@ package com.biobirding.biobirding.webservice;
 
 import android.util.Log;
 
+import com.biobirding.biobirding.entity.LocalSpecies;
 import com.biobirding.biobirding.entity.PopularName;
 import com.biobirding.biobirding.entity.Species;
 
@@ -63,7 +64,7 @@ public class PopularNameCall extends RequestCall{
         return popularNames;
     }
 
-    public ArrayList<PopularName> selectAll() throws IOException, JSONException, InterruptedException {
+    public ArrayList<LocalSpecies> selectAll() throws IOException, JSONException, InterruptedException {
 
         super.setRoute("/popularName/selectAll");
         super.setHttpURLConnection();
@@ -72,17 +73,24 @@ public class PopularNameCall extends RequestCall{
 
         JSONObject json = super.Response();
 
-        ArrayList<PopularName> listPopularNames = new ArrayList<>();
+        ArrayList<LocalSpecies> listLocalSpecies = new ArrayList<>();
         JSONArray popularNamesCall = json.getJSONArray("popularNames");
         for(int i = 0; i < popularNamesCall.length(); i++){
             JSONObject finalObject = popularNamesCall.getJSONObject(i);
-            PopularName popularName = new PopularName();
-            popularName.setName(finalObject.getString("name"));
-            popularName.setId(Integer.parseInt(finalObject.getString("species")));
-            listPopularNames.add(popularName);
+            LocalSpecies localSpecies = new LocalSpecies();
+            localSpecies.setName(finalObject.getString("name"));
+            localSpecies.setId(Integer.parseInt(finalObject.getString("species")));
+            localSpecies.setScientificName(finalObject.getString("scientificName"));
+            listLocalSpecies.add(localSpecies);
         }
 
-        return listPopularNames;
+        Integer count = Integer.parseInt(json.getString("count"));
+
+        if(listLocalSpecies.size() != count){
+            listLocalSpecies.clear();
+        }
+
+        return listLocalSpecies;
     }
 
     public Boolean update(PopularName  popularName, String newName) throws InterruptedException, IOException, JSONException {

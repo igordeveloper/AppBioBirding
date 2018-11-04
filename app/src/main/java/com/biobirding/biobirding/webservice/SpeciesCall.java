@@ -64,29 +64,6 @@ public class SpeciesCall extends RequestCall {
         return species;
     }
 
-
-    public ArrayList<Species> selectAll() throws InterruptedException, IOException, JSONException{
-
-        ArrayList<Species> listSpecies = new ArrayList<>();
-
-        super.setRoute("/species/selectAll");
-        super.setHttpURLConnection();
-        super.setConRequestProperty();
-        super.setParameters("");
-        JSONObject json = super.Response();
-
-        JSONArray speciesCall = json.getJSONArray("species");
-        for(int i = 0; i < speciesCall.length(); i++){
-            JSONObject finalObject = speciesCall.getJSONObject(i);
-            Species species = new Species();
-            species.setId(Integer.parseInt(finalObject.getString("id")));
-            species.setScientificName(finalObject.getString("scientificName"));
-            listSpecies.add(species);
-        }
-
-        return listSpecies;
-    }
-
     public Boolean update(Species species) throws InterruptedException, IOException, JSONException{
 
         JSONObject json;

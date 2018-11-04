@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Base64;
+import android.util.Log;
 
 import com.biobirding.biobirding.AppApplication;
 import com.biobirding.biobirding.activity.LogoffActivity;
@@ -38,10 +39,10 @@ public class RequestCall {
 
     public void setConRequestProperty(){
 
-        String nickname = sharedPreferences.getString("nickname_bio", "");
+        String rg = sharedPreferences.getString("rg_bio", "");
         String password = sharedPreferences.getString("password_bio", "");
         try {
-            String str = nickname + "||" + password;
+            String str = rg + "||" + password;
             byte[] authorization = str.getBytes("UTF-8");
             this.con.setRequestProperty("authorizationCode", Base64.encodeToString(authorization, Base64.NO_WRAP).trim());
 
