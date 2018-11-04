@@ -1,5 +1,7 @@
 package com.biobirding.biobirding.activity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -10,21 +12,21 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.database.AppDatabase;
 import com.biobirding.biobirding.entity.LastUpdate;
-import com.biobirding.biobirding.entity.PopularName;
-import com.biobirding.biobirding.entity.Species;
+import com.biobirding.biobirding.entity.LocalSpecies;
 import com.biobirding.biobirding.helper.CustomSnackBar;
+import com.biobirding.biobirding.SpeciesUpdateReceiver;
 import com.biobirding.biobirding.webservice.PopularNameCall;
-import com.biobirding.biobirding.webservice.SpeciesCall;
+
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.Random;
 
 public class UpdateSpeciesActivity extends AppCompatActivity {
 
@@ -44,53 +46,49 @@ public class UpdateSpeciesActivity extends AppCompatActivity {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
                 if(cm != null){
                     NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
                     boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
                     if(isConnected){
+
                         update.setEnabled(false);
                         progressBar.setVisibility(View.VISIBLE);
 
                         new Thread(new Runnable() {
 
                             AppDatabase database = Room.databaseBuilder(getApplicationContext(), AppDatabase.class, "BioBirding").build();
-                            ArrayList<Species> speciesArrayList;
-                            ArrayList<PopularName> popularNameArrayList;
+
+                            ArrayList<LocalSpecies> localSpeciesArrayList;
                             Boolean response = false;
 
                             @Override
                             public void run() {
-
-                                SpeciesCall speciesCall = new SpeciesCall();
+                                database.lastUpdateDao().deleteAll();
                                 PopularNameCall popularNameCall = new PopularNameCall();
 
                                 try {
-                                    speciesArrayList = speciesCall.selectAll();
+
+                                    localSpeciesArrayList = popularNameCall.selectAll();
+                                    database.localSpeciesDao().deleteAll();
+
                                     int c = 0;
-                                    for (Species s: speciesArrayList) {
-                                        database.speciesDao().insert(s);
+                                    for (LocalSpecies l : localSpeciesArrayList) {
+                                        database.localSpeciesDao().insert(l);
                                         c++;
                                     }
 
-                                    if(c == speciesArrayList.size()){
-                                        popularNameArrayList = popularNameCall.selectAll();
-                                        c = 0;
-                                        for (PopularName p : popularNameArrayList) {
-                                            database.popularNameDao().insert(p);
-                                            c++;
-                                        }
-                                        if(c == popularNameArrayList.size()){
-                                            LastUpdate lastUpdate = new LastUpdate();
-                                            lastUpdate.setTimestamp(new Date().getTime());
-                                            database.lastUpdateDao().insert(lastUpdate);
-                                            response = true;
-                                        }else{
-                                            database.speciesDao().deleteAll();
-                                            database.popularNameDao().deleteAll();
-                                        }
+                                    if(c == localSpeciesArrayList.size()){
+
+                                        LastUpdate lastUpdate = new LastUpdate();
+                                        Long tsLong = System.currentTimeMillis()/1000;
+                                        lastUpdate.setTimestamp(tsLong);
+                                        database.lastUpdateDao().insert(lastUpdate);
+                                        response = true;
+
                                     }else{
-                                        database.speciesDao().deleteAll();
+                                        database.localSpeciesDao().deleteAll();
                                     }
                                 } catch (InterruptedException | IOException | JSONException e) {
                                     e.printStackTrace();
@@ -102,6 +100,17 @@ public class UpdateSpeciesActivity extends AppCompatActivity {
                                     public void run() {
 
                                         if(response){
+
+                                            AlarmManager alarmMgr = (AlarmManager) getApplicationContext().getSystemService(ALARM_SERVICE);
+                                            Intent speciesIntent = new Intent(getApplicationContext(), SpeciesUpdateReceiver.class);
+                                            PendingIntent alarmSpeciesIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, speciesIntent, 0);
+                                            Calendar calendar = Calendar.getInstance();
+                                            calendar.setTimeInMillis(System.currentTimeMillis());
+                                            calendar.set(Calendar.HOUR_OF_DAY, new Random().nextInt(23));
+                                            calendar.set(Calendar.MINUTE, new Random().nextInt(59));
+                                            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                                                    AlarmManager.INTERVAL_DAY, alarmSpeciesIntent);
+
                                             startActivity(new Intent(UpdateSpeciesActivity.this, MainActivity.class));
                                         }else{
                                             progressBar.setVisibility(View.GONE);

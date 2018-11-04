@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.fragments.SelectLocalSpeciesFragment;
 
-public class RegisterActivity extends BaseActivity {
+public class CatalogActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

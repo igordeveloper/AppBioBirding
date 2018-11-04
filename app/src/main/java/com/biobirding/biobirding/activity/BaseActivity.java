@@ -5,13 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.biobirding.biobirding.R;
-import com.biobirding.biobirding.helper.CustomSnackBar;
 
 public class BaseActivity extends AppCompatActivity {
 
@@ -23,8 +21,6 @@ public class BaseActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("bio", Context.MODE_PRIVATE);
         boolean authenticate = sharedPref.getBoolean("authenticate_bio", false);
         this.accessLevel = sharedPref.getInt("access_level", 0);
-
-        Log.d("------password", sharedPref.getString("password_bio", ""));
 
         if(!authenticate){
             startActivity(new Intent(BaseActivity.this, LoginActivity.class));
