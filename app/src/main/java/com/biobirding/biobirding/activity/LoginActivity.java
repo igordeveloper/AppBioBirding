@@ -17,7 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.entity.User;
 import com.biobirding.biobirding.helper.HashPassword;
-import com.biobirding.biobirding.webservice.LoginCall;
+import com.biobirding.biobirding.webservice.UserCall;
 
 import org.json.JSONException;
 
@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 new Thread(new Runnable() {
 
-                    LoginCall loginCall = new LoginCall();
+                    UserCall userCall = new UserCall();
                     String hashPassword;
 
 
@@ -65,7 +65,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             hashPassword = HashPassword.encode256(password.getText().toString());
-                            user = loginCall.validate(nickname.getText().toString(), hashPassword);
+                            user = userCall.validate(nickname.getText().toString(), hashPassword);
                         } catch (IOException | JSONException | InterruptedException | NoSuchAlgorithmException e) {
                             e.printStackTrace();
                         }

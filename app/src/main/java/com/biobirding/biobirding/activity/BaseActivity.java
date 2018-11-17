@@ -29,8 +29,15 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+
+        if(this.accessLevel == 1) {
+            inflater.inflate(R.menu.menu_admin, menu);
+        }else{
+            inflater.inflate(R.menu.menu, menu);
+        }
+
         return true;
     }
 
@@ -48,6 +55,10 @@ public class BaseActivity extends AppCompatActivity {
 
             case R.id.loggof:
                 startActivity(new Intent(BaseActivity.this, LogoffActivity.class));
+                return true;
+
+            case R.id.editUser:
+                startActivity(new Intent(BaseActivity.this,UserActivity.class));
                 return true;
 
             default:

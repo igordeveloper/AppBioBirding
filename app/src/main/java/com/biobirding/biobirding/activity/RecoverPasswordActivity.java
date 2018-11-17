@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.biobirding.biobirding.R;
-import com.biobirding.biobirding.webservice.LoginCall;
+import com.biobirding.biobirding.webservice.UserCall;
 
 import org.json.JSONException;
 
@@ -48,9 +48,9 @@ public class RecoverPasswordActivity extends AppCompatActivity {
 
                     @Override
                     public void run() {
-                        LoginCall loginCall = new LoginCall();
+                        UserCall userCall = new UserCall();
                         try {
-                            response = loginCall.recoverPassword(email.getText().toString());
+                            response = userCall.recoverPassword(email.getText().toString());
                         } catch (IOException | JSONException | InterruptedException e) {
                             exception = e.getMessage();
                         }

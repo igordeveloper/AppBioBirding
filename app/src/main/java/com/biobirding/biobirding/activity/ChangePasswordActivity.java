@@ -15,7 +15,7 @@ import android.widget.EditText;
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.entity.User;
 import com.biobirding.biobirding.helper.HashPassword;
-import com.biobirding.biobirding.webservice.LoginCall;
+import com.biobirding.biobirding.webservice.UserCall;
 
 import org.json.JSONException;
 
@@ -79,9 +79,9 @@ public class ChangePasswordActivity extends BaseActivity {
                             @Override
                             public void run() {
 
-                                    LoginCall loginCall = new LoginCall();
+                                    UserCall userCall = new UserCall();
                                 try {
-                                    response = loginCall.updatePassword(user, newPassword);
+                                    response = userCall.updatePassword(user, newPassword);
                                 } catch (IOException | JSONException | InterruptedException e) {
                                     exception = e.getMessage();
                                 }
