@@ -2,6 +2,11 @@
 <menu xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/editUser"
+        android:title="@string/edit_users"/>
+
     <item
         android:id="@+id/editPassword"
         android:title="@string/edit_password"/>
