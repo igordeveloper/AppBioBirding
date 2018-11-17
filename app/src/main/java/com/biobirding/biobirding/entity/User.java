@@ -11,6 +11,11 @@ public class User  implements Serializable{
     private String crBio;
     private String password;
     private Integer accessLevel;
+    private Boolean enabled;
+
+    public Boolean getEnabled() { return enabled; }
+
+    public void setEnabled(Boolean enabled) { this.enabled = enabled; }
 
     public String getRg() {
         return rg;
