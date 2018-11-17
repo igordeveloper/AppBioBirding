@@ -143,14 +143,14 @@ public class EditSpeciesFragment extends Fragment {
         new Thread(new Runnable() {
 
             String exception;
-            Species speciesReponse;
+            Species speciesResponse;
 
             @Override
             public void run() {
 
-                final SpeciesCall speciesCall = new SpeciesCall();
+                SpeciesCall speciesCall = new SpeciesCall();
                 try {
-                    speciesReponse = speciesCall.select(species);
+                    speciesResponse = speciesCall.select(species);
                 } catch (InterruptedException | IOException | JSONException e) {
                     exception = e.getMessage();
                 }
@@ -162,11 +162,11 @@ public class EditSpeciesFragment extends Fragment {
                         AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
                         if(exception == null){
-                            if(species.getScientificName().equals(speciesReponse.getScientificName())){
-                                notes.setText(speciesReponse.getNotes());
-                                if(!speciesReponse.getConservationState().equals("null")){
+                            if(species.getScientificName().equals(speciesResponse.getScientificName())){
+                                notes.setText(speciesResponse.getNotes());
+                                if(!speciesResponse.getConservationState().equals("null")){
                                     for (int i = 0; i < spinner.getCount(); i++) {
-                                        if (spinner.getItemAtPosition(i).equals(speciesReponse.getConservationState())) {
+                                        if (spinner.getItemAtPosition(i).equals(speciesResponse.getConservationState())) {
                                             spinner.setSelection(i);
                                             break;
                                         }

@@ -9,16 +9,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.entity.User;
 import com.biobirding.biobirding.webservice.UserCall;
@@ -27,7 +26,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-public class InsertUserFragment extends Fragment {
+public class EditUserFragment extends Fragment {
 
     private Spinner spinner;
     private EditText fullName;
@@ -35,16 +34,16 @@ public class InsertUserFragment extends Fragment {
     private EditText nickname;
     private EditText crBio;
     private EditText rg;
-    private EditText password;
-    private Button addUser;
+    private Button editUser;
     private Handler handler = new Handler();
     private Context context;
-
+    private User user;
+    private RadioButton enabled;
+    private RadioButton disabled;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_insert_user, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_edit_user, container, false);
         this.context = getContext();
 
         this.spinner = view.findViewById(R.id.accessLevelList);
@@ -54,8 +53,81 @@ public class InsertUserFragment extends Fragment {
         this.nickname = view.findViewById(R.id.nickname);
         this.crBio = view.findViewById(R.id.crbio);
         this.crBio = view.findViewById(R.id.crbio);
-        this.password = view.findViewById(R.id.password);
-        this.addUser = view.findViewById(R.id.addUser);
+        this.editUser = view.findViewById(R.id.editUser);
+        enabled  = view.findViewById(R.id.enabled);
+        disabled  = view.findViewById(R.id.disabled);
+
+        if(getArguments() != null){
+            Bundle bundle = getArguments();
+            this.user = (User) bundle.getSerializable("user");
+
+            new Thread(new Runnable() {
+
+                String exception;
+                User userResponse;
+
+                @Override
+                public void run() {
+
+                    UserCall userCall = new UserCall();
+                    try {
+                        userResponse = userCall.select(user);
+                    } catch (InterruptedException | IOException | JSONException e) {
+                        exception = e.getMessage();
+                    }
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                            if(exception == null){
+                                if(user.getRg().equals(userResponse.getRg())){
+
+                                    fullName.setText(userResponse.getFullName());
+                                    rg.setText(userResponse.getRg());
+                                    email.setText(userResponse.getEmail());
+                                    nickname.setText(userResponse.getNickname());
+                                    crBio.setText(userResponse.getCrBio());
+                                    spinner.setSelection(userResponse.getAccessLevel());
+
+                                    if(userResponse.getEnabled()){
+                                        enabled.setChecked(true);
+                                    }else{
+                                        disabled.setChecked(true);
+                                    }
+
+                                }else{
+                                    alert.setMessage(R.string.fail);
+                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            redirectActivity();
+                                        }
+                                    });
+                                    alert.show();
+
+                                }
+                            }else{
+                                alert.setMessage(exception);
+                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        redirectActivity();
+                                    }
+                                });
+                                alert.show();
+                            }
+
+
+
+                        }
+                    });
+                }
+            }).start();
+
+        }
 
         if (getContext() != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -64,10 +136,12 @@ public class InsertUserFragment extends Fragment {
             this.spinner.setAdapter(adapter);
         }
 
-        addUser.setOnClickListener(new View.OnClickListener() {
+        editUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addUser.setEnabled(false);
+
+
+                editUser.setEnabled(false);
 
                 if(validateFields()) {
 
@@ -79,26 +153,29 @@ public class InsertUserFragment extends Fragment {
                         @Override
                         public void run() {
 
-
-
-
                             Integer accessLevel = 0;
+                            Boolean status = null;
                             if(spinner.getSelectedItemId() != 0){
                                 accessLevel = (int) spinner.getSelectedItemId();
+                            }
+
+                            if(enabled.isChecked()){
+                                status = true;
+                            }
+                            if(disabled.isChecked()){
+                                status = false;
                             }
 
                             User user = new User();
                             user.setRg(rg.getText().toString());
                             user.setFullName(fullName.getText().toString());
-                            user.setEmail(email.getText().toString());
-                            user.setNickname(nickname.getText().toString());
-                            user.setPassword(password.getText().toString());
                             user.setCrBio(crBio.getText().toString());
                             user.setAccessLevel(accessLevel);
+                            user.setEnabled(status);
 
                             UserCall userCall = new UserCall();
                             try {
-                                response = userCall.insert(user);
+                                response = userCall.update(user);
                             } catch (InterruptedException | IOException | JSONException e) {
                                 exception = e.getMessage();
                             }
@@ -112,14 +189,14 @@ public class InsertUserFragment extends Fragment {
 
                                     if(exception == null){
                                         if(response){
-                                            alert.setMessage(R.string.msg_user_register);
+                                            alert.setMessage(R.string.msg_update_user);
                                         }else{
                                             alert.setMessage(R.string.fail);
-                                            addUser.setEnabled(true);
+                                            editUser.setEnabled(true);
                                         }
                                     }else{
                                         alert.setMessage(exception);
-                                        addUser.setEnabled(true);
+                                        editUser.setEnabled(true);
                                     }
 
                                     alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -138,9 +215,6 @@ public class InsertUserFragment extends Fragment {
 
                         }
                     }).start();
-
-
-
                 }
             }
         });
@@ -151,44 +225,40 @@ public class InsertUserFragment extends Fragment {
     public boolean validateFields(){
         if(TextUtils.isEmpty(fullName.getText().toString())){
             fullName.setError(getString(R.string.requiredText));
-            addUser.setEnabled(true);
+            editUser.setEnabled(true);
             return false;
         }
 
         if(TextUtils.isEmpty(rg.getText().toString())){
             rg.setError(getString(R.string.requiredText));
-            addUser.setEnabled(true);
+            editUser.setEnabled(true);
             return false;
         }
 
 
         if(TextUtils.isEmpty(email.getText().toString())){
             email.setError(getString(R.string.requiredText));
-            addUser.setEnabled(true);
+            editUser.setEnabled(true);
             return false;
         }
 
         if(TextUtils.isEmpty(nickname.getText().toString())){
             nickname.setError(getString(R.string.requiredText));
-            addUser.setEnabled(true);
+            editUser.setEnabled(true);
             return false;
         }
 
-        if(TextUtils.isEmpty(password.getText().toString())){
-            password.setError(getString(R.string.requiredText));
-            addUser.setEnabled(true);
-            return false;
-        }
+
 
         if(TextUtils.isEmpty(fullName.getText().toString())){
             fullName.setError(getString(R.string.requiredText));
-            addUser.setEnabled(true);
+            editUser.setEnabled(true);
             return false;
         }
 
         if (spinner.getSelectedItemId() == 0) {
             ((TextView)spinner.getSelectedView()).setError(getString(R.string.requiredText));
-            addUser.setEnabled(true);
+            editUser.setEnabled(true);
             return false;
         }
 

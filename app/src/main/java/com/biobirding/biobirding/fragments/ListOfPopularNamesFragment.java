@@ -54,10 +54,10 @@ public class ListOfPopularNamesFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //Receive specie object
+                //Receive popularName object
                 PopularName popularName = (PopularName) parent.getAdapter().getItem(position);
 
-                //Change to InfoSpeciesFragment
+                //Change to EditPopularNameFragment
                 EditPopularNameFragment editPopularNameFragment = new EditPopularNameFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("species", species);

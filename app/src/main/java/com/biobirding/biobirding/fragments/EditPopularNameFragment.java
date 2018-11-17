@@ -37,7 +37,7 @@ public class EditPopularNameFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_edit_popular_name, container, false);
+        View view = inflater.inflate(R.layout.fragment_edit_popular_name, container, false);
 
         if(getArguments() != null) {
             Bundle bundle = getArguments();

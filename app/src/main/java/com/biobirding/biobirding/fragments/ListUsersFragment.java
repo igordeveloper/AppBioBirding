@@ -13,60 +13,46 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.biobirding.biobirding.R;
-import com.biobirding.biobirding.customAdapters.PopularNameAdapter;
-import com.biobirding.biobirding.entity.Species;
-import com.biobirding.biobirding.entity.PopularName;
-import com.biobirding.biobirding.webservice.PopularNameCall;
+import com.biobirding.biobirding.customAdapters.UserAdapter;
+import com.biobirding.biobirding.entity.User;
+import com.biobirding.biobirding.webservice.UserCall;
 
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class ListOfPopularNamesFragment extends Fragment {
+public class ListUsersFragment extends Fragment {
 
     private ListView listView;
-    private ArrayList<PopularName> popularNameList;
-    private PopularNameAdapter adapter;
-    private Species species;
+    private ArrayList<User> userList;
+    private UserAdapter adapter;
     private Handler handler = new Handler();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_list_of_popular_names, container, false);
-        this.listView = view.findViewById(R.id.popularNameListView);
-        TextView scientificName = view.findViewById(R.id.scientific_name);
+        View view = inflater.inflate(R.layout.fragment_list_users, container, false);
+        this.listView = view.findViewById(R.id.usersListView);
         initList(getContext());
-
-        if(getArguments() != null){
-            Bundle bundle = getArguments();
-            this.species = (Species) bundle.getSerializable("species");
-
-            if (species != null) {
-                scientificName.setText(species.getScientificName());
-            }
-        }
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //Receive specie object
-                PopularName popularName = (PopularName) parent.getAdapter().getItem(position);
+                //Receive user object
+                User user = (User) parent.getAdapter().getItem(position);
 
-                //Change to InfoSpeciesFragment
-                EditPopularNameFragment editPopularNameFragment = new EditPopularNameFragment();
+                //Change to EditUserFragment
+                EditUserFragment editUserFragment = new EditUserFragment();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("species", species);
-                bundle.putSerializable("popularName", popularName);
-                editPopularNameFragment.setArguments(bundle);
+                bundle.putSerializable("user", user);
+                editUserFragment.setArguments(bundle);
 
                 if(getFragmentManager() != null) {
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, editPopularNameFragment);
+                    transaction.replace(R.id.fragment_container, editUserFragment);
                     transaction.commit();
                 }
             }
@@ -78,35 +64,31 @@ public class ListOfPopularNamesFragment extends Fragment {
             public void onClick(View v) {
 
                 if(getFragmentManager() != null) {
-                    InsertPopularNameFragment popularNameFragment = new InsertPopularNameFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("species", species);
-                    popularNameFragment.setArguments(bundle);
+                    InsertUserFragment insertUserFragment = new InsertUserFragment();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, popularNameFragment);
+                    transaction.replace(R.id.fragment_container, insertUserFragment);
                     transaction.commit();
                 }
             }
         });
 
-
-        selectAllNames();
+        selectUsers();
         return view;
     }
 
 
-    public void selectAllNames(){
+    public void selectUsers(){
 
         new Thread(new Runnable() {
 
-            ArrayList<PopularName> popularNames;
+            ArrayList<User> users;
 
             @Override
             public void run() {
 
-                PopularNameCall popularNameCall = new PopularNameCall();
+                UserCall userCall = new UserCall();
                 try {
-                    popularNames = popularNameCall.selectAllFromSpecies(species);
+                    users = userCall.selectAll();
                 } catch (InterruptedException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
@@ -114,8 +96,8 @@ public class ListOfPopularNamesFragment extends Fragment {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        popularNameList.clear();
-                        popularNameList.addAll(popularNames);
+                        userList.clear();
+                        userList.addAll(users);
                         adapter.notifyDataSetChanged();
                     }
                 });
@@ -125,8 +107,8 @@ public class ListOfPopularNamesFragment extends Fragment {
     }
 
     public void initList(Context context){
-        popularNameList = new ArrayList<>();
-        adapter = new PopularNameAdapter((Activity) context, popularNameList);
+        userList = new ArrayList<>();
+        adapter = new UserAdapter((Activity) context, userList);
         this.listView.setAdapter(adapter);
     }
 
