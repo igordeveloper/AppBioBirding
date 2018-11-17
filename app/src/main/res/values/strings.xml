@@ -3,9 +3,8 @@
     <string name="title_activity_gps">GpsActinvity</string>
     <string name="update_location">Entrar</string>
     <string name="btn_fused_location">Atualizar localização</string>
-    <string name="nickname">Nickname ou E-mail</string>
-    <string name="email">Informe seu email</string>
-    <string name="password">Senha</string>
+    <string name="fill_nickname">Nickname ou E-mail</string>
+    <string name="fill_email">Informe seu email</string>
     <string name="invalid">E-mail ou senha inválida</string>
     <string name="invalid_email">E-mail não encontrado</string>
 
@@ -73,9 +72,21 @@
     <string name="differentPassword">As senhas devem ser as mesmas</string>
     <string name="change_password">A senha foi alterada com sucesso</string>
 
+    <!-- user -->
+    <string name="fullName">Nome completo</string>
+    <string name="email">E-mail</string>
+    <string name="nickname">Nickname</string>
+    <string name="crBio">CrBio</string>
+    <string name="password">Senha</string>
+    <string name="rg">Rg</string>
+    <string name="accessLevel">Nível de acesso</string>
+    <string name="user_register">Cadastrar novo usuário</string>
+    <string name="edit_user">Editar usuário</string>
+    <string name="msg_user_register">Usuário cadastrado com sucesso.</string>
+    <string name="msg_update_user">Usuário atualizado com sucesso.</string>
+
 
     <string name="ws_error">Erro. Informe o administrador sobre este erro</string>
-
     <string name="dev">Em desenvolvimento</string>
     <string name="fail">A operação falhou. Tente novamente mais tarde.</string>
 
@@ -105,6 +116,13 @@
     <string name="no_report">Não há registros para o intervalo de data informado.</string>
 
 
+    <string name="edit_users">Editar Usuários</string>
+    <string name="usersList">Lista de usuários</string>
+    
+    <string name="enabled">Habilitado</string>
+    <string name="disabled">Desativado</string>
+    
+
     <string name="about_text">
 
     Versão 1.0.0 \n23/07/2018\n\nBioBirding é um aplicativo móvel que contribui com
@@ -117,6 +135,9 @@
     localização específica.
 
     </string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>
