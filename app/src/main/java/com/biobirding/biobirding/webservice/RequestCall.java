@@ -41,11 +41,12 @@ public class RequestCall {
 
         String rg = sharedPreferences.getString("rg_bio", "");
         String password = sharedPreferences.getString("password_bio", "");
+        Integer accessLevel = sharedPreferences.getInt("access_level", 0);
         try {
-            String str = rg + "||" + password;
+            String str = rg + "||" + password + "||" + accessLevel;
             byte[] authorization = str.getBytes("UTF-8");
             this.con.setRequestProperty("authorizationCode", Base64.encodeToString(authorization, Base64.NO_WRAP).trim());
-
+            Log.d("-----------------", Base64.encodeToString(authorization, Base64.NO_WRAP).trim());
         } catch (IOException e) {
             e.printStackTrace();
         }
