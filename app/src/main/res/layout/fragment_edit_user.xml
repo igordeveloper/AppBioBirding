@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".activity.UserActivity">
 
 
@@ -20,13 +20,13 @@
         <Spinner
             android:id="@+id/accessLevelList"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="14dp"
+            android:layout_height="54dp"
+            android:layout_marginBottom="1dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="4dp"
             android:spinnerMode="dialog"
-            app:layout_constraintBottom_toTopOf="@+id/addUser"
+            app:layout_constraintBottom_toTopOf="@+id/status"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,10 +34,9 @@
 
         <TextView
             android:id="@+id/textView"
-            android:layout_width="250dp"
-            android:layout_height="45dp"
-            android:layout_marginBottom="13dp"
-            android:text="@string/user_register"
+            android:layout_width="245dp"
+            android:layout_height="54dp"
+            android:text="@string/edit_user"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textColor="#004d8B"
@@ -50,48 +49,49 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
-
         <EditText
             android:id="@+id/fullName"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginBottom="13dp"
+            android:layout_height="54dp"
+            android:layout_marginBottom="1dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="4dp"
             android:ems="10"
             android:hint="@string/fullName"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/rg"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView"
-            app:layout_constraintVertical_bias="1.0" />
-        <EditText
-            android:id="@+id/rg"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="14dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="13dp"
-            android:ems="10"
-            android:hint="@string/rg"
-            android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/email"
+            app:layout_constraintBottom_toTopOf="@+id/crbio"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fullName" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+        <EditText
+            android:id="@+id/rg"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="4dp"
+            android:ems="10"
+            android:enabled="false"
+            android:hint="@string/rg"
+            android:inputType="textPersonName"
+            app:layout_constraintBottom_toTopOf="@+id/editUser"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nickname" />
+
         <EditText
             android:id="@+id/crbio"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="13dp"
+            android:layout_height="54dp"
+            android:layout_marginBottom="1dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="4dp"
             android:ems="10"
             android:hint="@string/crBio"
             android:inputType="textPersonName"
@@ -99,20 +99,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password" />
+            app:layout_constraintTop_toBottomOf="@+id/fullName" />
 
         <EditText
             android:id="@+id/nickname"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="13dp"
+            android:layout_height="54dp"
+            android:layout_marginBottom="1dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="13dp"
+            android:layout_marginTop="4dp"
             android:ems="10"
+            android:enabled="false"
             android:hint="@string/nickname"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/password"
+            app:layout_constraintBottom_toTopOf="@+id/rg"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -121,47 +122,60 @@
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_marginBottom="13dp"
+            android:layout_height="54dp"
+            android:layout_marginBottom="1dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="4dp"
             android:ems="10"
+            android:enabled="false"
             android:hint="@string/email"
             android:inputType="textEmailAddress"
             app:layout_constraintBottom_toTopOf="@+id/nickname"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rg" />
+            app:layout_constraintTop_toBottomOf="@+id/status" />
 
-        <EditText
-            android:id="@+id/password"
+
+        <RadioGroup
+            android:id="@+id/status"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_marginBottom="14dp"
+            android:layout_height="54dp"
+            android:layout_marginBottom="1dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:layout_marginTop="13dp"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:maxLength="10"
-            app:layout_constraintBottom_toTopOf="@+id/crbio"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/email"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nickname" />
+            app:layout_constraintTop_toBottomOf="@+id/accessLevelList">
+
+            <RadioButton
+                android:id="@+id/enabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/enabled" />
+
+            <RadioButton
+                android:id="@+id/disabled"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/disabled" />
+
+        </RadioGroup>
 
         <Button
-            android:id="@+id/addUser"
+            android:id="@+id/editUser"
             android:layout_width="wrap_content"
-            android:layout_height="46dp"
-            android:layout_marginTop="14dp"
-            android:text="@string/save"
+            android:layout_height="55dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/edit"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accessLevelList" />
+            app:layout_constraintTop_toBottomOf="@+id/rg" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

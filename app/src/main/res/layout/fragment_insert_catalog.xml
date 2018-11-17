@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout_editor_absoluteY="25dp"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    tools:layout_editor_absoluteY="25dp">
 
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="250dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -20,7 +20,9 @@
         android:textColor="#004d8B"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/scientific_name"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/ageList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,7 +35,12 @@
         android:layout_alignEnd="@+id/notes"
 
         android:layout_alignTop="@+id/textView3"
-        android:spinnerMode="dialog" />
+        android:spinnerMode="dialog"
+        app:layout_constraintBottom_toTopOf="@+id/identificationCode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/ageList" />
 
 
     <Spinner
@@ -42,7 +49,12 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/sexLIst"
         android:layout_alignTop="@+id/textView2"
-        android:spinnerMode="dialog" />
+        android:spinnerMode="dialog"
+        app:layout_constraintBottom_toTopOf="@+id/sexLIst"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <Button
         android:id="@+id/insert"
@@ -50,26 +62,38 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="61dp"
-        android:text="@string/insert" />
+        android:text="@string/insert"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/notes" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="17dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="97dp"
-        android:layout_toStartOf="@+id/title"
-        android:text="@string/age" />
+        android:layout_alignStart="@+id/title"
+        android:text="@string/age"
+        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintEnd_toStartOf="@+id/ageList"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignStart="@+id/textView2"
-        android:layout_marginTop="138dp"
-        android:text="@string/sex" />
+        android:layout_alignStart="@+id/title"
+        android:text="@string/sex"
+        app:layout_constraintBottom_toTopOf="@+id/identificationCode"
+        app:layout_constraintEnd_toStartOf="@+id/sexLIst"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
 
     <EditText
@@ -78,10 +102,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="162dp"
         android:hint="@string/notes"
         android:inputType="textMultiLine"
-        android:lines="3" />
+        android:lines="3"
+        app:layout_constraintBottom_toTopOf="@+id/insert"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/identificationCode" />
 
     <EditText
         android:id="@+id/identificationCode"
@@ -89,8 +117,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="216dp"
         android:ems="10"
+        android:hint="@string/identification_code"
         android:inputType="textPersonName"
-        android:hint="@string/identification_code" />
-</RelativeLayout>
+        app:layout_constraintBottom_toTopOf="@+id/notes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sexLIst" />
+</android.support.constraint.ConstraintLayout>
