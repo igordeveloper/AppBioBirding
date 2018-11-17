@@ -42,17 +42,16 @@ public class CatalogReceiver extends BroadcastReceiver {
                         AppDatabase database = Room.databaseBuilder(context, AppDatabase.class, "BioBirding").build();
                         List<Catalog> list = database.catalogDao().getAll();
 
-                        Log.d("log------", "backup" + list.size());
-
                         if(list.size() > 0){
                             CatalogCall catalogCall = new CatalogCall();
                             Boolean response;
                             for (Catalog catalog:list) {
                                 try {
                                     response = catalogCall.selectCount(catalog);
-                                    Log.d("log------", "response" + response.toString());
                                     if(!response){
-                                        catalogCall.insert(catalog);
+                                        if(!catalogCall.insert(catalog)){
+                                            database.catalogDao().delete(catalog.getId());
+                                        }
                                     }else{
                                         database.catalogDao().delete(catalog.getId());
                                     }
