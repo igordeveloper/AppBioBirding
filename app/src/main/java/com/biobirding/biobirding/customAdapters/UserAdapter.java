@@ -6,33 +6,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
+
+import com.biobirding.biobirding.entity.User;
 
 import java.util.ArrayList;
 
-import android.widget.TextView;
+public class UserAdapter extends BaseAdapter{
 
-import com.biobirding.biobirding.entity.Species;
-
-public class SpeciesAdapter extends BaseAdapter{
-
-    private Activity context;
-    private ArrayList<Species> species;
+    private ArrayList<User> users;
     private static LayoutInflater inflater;
 
-    public SpeciesAdapter(Activity context, ArrayList<Species> species){
-        this.context = context;
-        this.species = species;
+    public UserAdapter(Activity context, ArrayList<User> users){
+        Activity context1 = context;
+        this.users = users;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
     public int getCount() {
-        return this.species.size();
+        return this.users.size();
     }
 
     @Override
-    public Species getItem(int position) {
-        return this.species.get(position);
+    public User getItem(int position) {
+        return this.users.get(position);
     }
 
     @Override
@@ -46,7 +44,7 @@ public class SpeciesAdapter extends BaseAdapter{
 
         view = (view == null) ? inflater.inflate(android.R.layout.simple_list_item_1, null) : view;
         TextView textView = (TextView) view.findViewById(android.R.id.text1);
-        textView.setText(species.get(position).getScientificName());
+        textView.setText(users.get(position).getFullName());
         return view;
     }
 }
