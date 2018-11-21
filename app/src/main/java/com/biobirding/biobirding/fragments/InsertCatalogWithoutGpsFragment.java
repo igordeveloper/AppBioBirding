@@ -23,7 +23,7 @@ import android.widget.EditText;
 import com.biobirding.biobirding.CatalogReceiver;
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.database.AppDatabase;
-import com.biobirding.biobirding.entity.Catalog;
+import com.biobirding.biobirding.entity.LocalCatalog;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,7 +34,7 @@ public class InsertCatalogWithoutGpsFragment extends Fragment {
     private Button insert;
     private EditText latitude;
     private EditText longitude;
-    private Catalog catalog;
+    private LocalCatalog localCatalog;
     private Context context;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class InsertCatalogWithoutGpsFragment extends Fragment {
 
         if(getArguments() != null){
             Bundle bundle = getArguments();
-            this.catalog = (Catalog) bundle.getSerializable("catalog");
+            this.localCatalog = (LocalCatalog) bundle.getSerializable("catalog");
         }
 
         this.insert.setOnClickListener(new View.OnClickListener() {
@@ -57,8 +57,8 @@ public class InsertCatalogWithoutGpsFragment extends Fragment {
                 if(validateFields()){
                     insert.setEnabled(false);
                     Log.d("dasda", latitude.getText().toString());
-                    catalog.setLatitude(Double.parseDouble(latitude.getText().toString()));
-                    catalog.setLongitude(Double.parseDouble(longitude.getText().toString()));
+                    localCatalog.setLatitude(Double.parseDouble(latitude.getText().toString()));
+                    localCatalog.setLongitude(Double.parseDouble(longitude.getText().toString()));
                     new Thread(new Runnable() {
 
                         String exception = null;
@@ -69,7 +69,7 @@ public class InsertCatalogWithoutGpsFragment extends Fragment {
 
                             AppDatabase database = Room.databaseBuilder(context,
                                     AppDatabase.class, "BioBirding").build();
-                            database.catalogDao().insert(catalog);
+                            database.catalogDao().insert(localCatalog);
                             response = true;
 
                             handler.post(new Runnable() {

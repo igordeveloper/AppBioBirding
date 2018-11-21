@@ -3,52 +3,41 @@ package com.biobirding.biobirding.fragments;
 import android.app.Activity;
 import android.arch.persistence.room.Room;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ScrollView;
-import android.widget.Spinner;
-
 import com.biobirding.biobirding.R;
-import com.biobirding.biobirding.activity.LogoffActivity;
 import com.biobirding.biobirding.customAdapters.LocalSpeciesAdapter;
 import com.biobirding.biobirding.database.AppDatabase;
 import com.biobirding.biobirding.entity.LocalSpecies;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.biobirding.biobirding.helper.CatalogHelper;
+import com.biobirding.biobirding.helper.SearchHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class SelectLocalSpeciesFragment extends Fragment {
 
-    private FusedLocationProviderClient client;
     private ListView listView;
     private ArrayList<LocalSpecies> speciesList;
     private LocalSpeciesAdapter adapter;
     private EditText txtSearch;
     private String search;
     private Handler handler = new Handler();
+    private CatalogHelper catalogHelper = null;
+    private SearchHelper searchHelper;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -56,11 +45,15 @@ public class SelectLocalSpeciesFragment extends Fragment {
         this.listView = view.findViewById(R.id.speciesListView);
         txtSearch = view.findViewById(R.id.txtSearch);
 
-        initList(getContext());
+        if(getArguments() !=null){
+            Bundle bundle = getArguments();
+            catalogHelper = (CatalogHelper) bundle.getSerializable("catalogHelper");
+            searchHelper = (SearchHelper) bundle.getSerializable("searchHelper");
+        }
 
+        initList(getContext());
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
 
                 listView.setVisibility(View.INVISIBLE);
 
@@ -72,20 +65,40 @@ public class SelectLocalSpeciesFragment extends Fragment {
                     }
                 }
 
-                //Receive specie object
+                //Receive localSpecies object
                 LocalSpecies localSpecies = (LocalSpecies) parent.getAdapter().getItem(position);
 
-                //Change to InfoSpeciesFragment
-                InsertCatalogFragment insertCatalogFragment = new InsertCatalogFragment();
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("localSpecies", localSpecies);
-                insertCatalogFragment.setArguments(bundle);
+                if(catalogHelper == null){
 
-                if(getFragmentManager() != null) {
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, insertCatalogFragment);
-                    transaction.commit();
+                    //Change to insertCatalogFragment
+                    InsertCatalogFragment insertCatalogFragment = new InsertCatalogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("localSpecies", localSpecies);
+                    insertCatalogFragment.setArguments(bundle);
+
+                    if(getFragmentManager() != null) {
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, insertCatalogFragment);
+                        transaction.commit();
+                    }
+                }else{
+
+                    //Change to insertCatalogFragment
+                    EditCatalogFragment editCatalogFragment = new EditCatalogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("catalogHelper", catalogHelper);
+                    bundle.putSerializable("searchHelper", searchHelper);
+                    bundle.putInt("newId", localSpecies.getId());
+                    editCatalogFragment.setArguments(bundle);
+
+                    if(getFragmentManager() != null) {
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, editCatalogFragment);
+                        transaction.commit();
+                    }
                 }
+
+
             }
         });
 
@@ -124,18 +137,20 @@ public class SelectLocalSpeciesFragment extends Fragment {
             @Override
             public void run() {
 
-                AppDatabase database = Room.databaseBuilder(getContext(), AppDatabase.class, "BioBirding").build();
-                Log.d("---", search);
-                response = database.localSpeciesDao().search(search);
+                if(getContext() != null){
+                    AppDatabase database = Room.databaseBuilder(getContext(), AppDatabase.class, "BioBirding").build();
+                    response = database.localSpeciesDao().search(search);
 
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        speciesList.clear();
-                        speciesList.addAll(response);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            speciesList.clear();
+                            speciesList.addAll(response);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+
             }
         }).start();
 
@@ -147,10 +162,4 @@ public class SelectLocalSpeciesFragment extends Fragment {
         this.listView.setAdapter(adapter);
     }
 
-    private void requestPermission() {
-        if (getActivity() != null){
-            ActivityCompat.requestPermissions(getActivity(), new String[]{ACCESS_FINE_LOCATION}, 1 );
-
-        }
-    }
 }

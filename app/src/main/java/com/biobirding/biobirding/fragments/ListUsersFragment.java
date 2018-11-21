@@ -2,6 +2,8 @@ package com.biobirding.biobirding.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -72,7 +74,17 @@ public class ListUsersFragment extends Fragment {
             }
         });
 
-        selectUsers();
+        if(getContext()!=null){
+            ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            if(cm != null) {
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+                if (isConnected) {
+                    selectUsers();
+                }
+            }
+        }
+
         return view;
     }
 
@@ -89,19 +101,19 @@ public class ListUsersFragment extends Fragment {
                 UserCall userCall = new UserCall();
                 try {
                     users = userCall.selectAll();
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            userList.clear();
+                            userList.addAll(users);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
                 } catch (InterruptedException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        userList.clear();
-                        userList.addAll(users);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-
             }
         }).start();
     }

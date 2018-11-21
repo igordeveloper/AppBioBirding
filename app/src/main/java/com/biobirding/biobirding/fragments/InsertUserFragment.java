@@ -46,15 +46,15 @@ public class InsertUserFragment extends Fragment {
 
         this.context = getContext();
 
-        this.spinner = view.findViewById(R.id.accessLevelList);
+        this.spinner = view.findViewById(R.id.city);
         this.fullName = view.findViewById(R.id.fullName);
-        this.rg = view.findViewById(R.id.rg);
+        this.rg = view.findViewById(R.id.identificationCode);
         this.email = view.findViewById(R.id.email);
         this.nickname = view.findViewById(R.id.nickname);
         this.crBio = view.findViewById(R.id.crbio);
         this.crBio = view.findViewById(R.id.crbio);
         this.password = view.findViewById(R.id.password);
-        this.addUser = view.findViewById(R.id.editUser);
+        this.addUser = view.findViewById(R.id.send);
 
         if (getContext() != null) {
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
@@ -77,9 +77,6 @@ public class InsertUserFragment extends Fragment {
 
                         @Override
                         public void run() {
-
-
-
 
                             Integer accessLevel = 0;
                             if(spinner.getSelectedItemId() != 0){

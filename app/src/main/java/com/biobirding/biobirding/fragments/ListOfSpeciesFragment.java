@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.renderscript.Sampler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -124,19 +125,22 @@ public class ListOfSpeciesFragment extends Fragment {
                 SpeciesCall speciesCall = new SpeciesCall();
                 try {
                     response = speciesCall.search(search);
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            speciesList.clear();
+                            if(response != null){
+                                speciesList.addAll(response);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
                 } catch (InterruptedException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        speciesList.clear();
-                        if(response != null){
-                            speciesList.addAll(response);
-                        }
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+
             }
         }).start();
 

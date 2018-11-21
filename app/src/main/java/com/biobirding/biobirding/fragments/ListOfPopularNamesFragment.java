@@ -107,18 +107,19 @@ public class ListOfPopularNamesFragment extends Fragment {
                 PopularNameCall popularNameCall = new PopularNameCall();
                 try {
                     popularNames = popularNameCall.selectAllFromSpecies(species);
+
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            popularNameList.clear();
+                            popularNameList.addAll(popularNames);
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+
                 } catch (InterruptedException | IOException | JSONException e) {
                     e.printStackTrace();
                 }
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        popularNameList.clear();
-                        popularNameList.addAll(popularNames);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
 
             }
         }).start();

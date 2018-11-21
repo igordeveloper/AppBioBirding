@@ -46,14 +46,14 @@ public class EditUserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_user, container, false);
         this.context = getContext();
 
-        this.spinner = view.findViewById(R.id.accessLevelList);
+        this.spinner = view.findViewById(R.id.city);
         this.fullName = view.findViewById(R.id.fullName);
-        this.rg = view.findViewById(R.id.rg);
+        this.rg = view.findViewById(R.id.identificationCode);
         this.email = view.findViewById(R.id.email);
         this.nickname = view.findViewById(R.id.nickname);
         this.crBio = view.findViewById(R.id.crbio);
         this.crBio = view.findViewById(R.id.crbio);
-        this.editUser = view.findViewById(R.id.editUser);
+        this.editUser = view.findViewById(R.id.send);
         enabled  = view.findViewById(R.id.enabled);
         disabled  = view.findViewById(R.id.disabled);
 

@@ -19,7 +19,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +31,7 @@ import android.widget.TextView;
 import com.biobirding.biobirding.CatalogReceiver;
 import com.biobirding.biobirding.R;
 import com.biobirding.biobirding.database.AppDatabase;
-import com.biobirding.biobirding.entity.Catalog;
+import com.biobirding.biobirding.entity.LocalCatalog;
 import com.biobirding.biobirding.entity.LocalSpecies;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -58,7 +57,7 @@ public class InsertCatalogFragment extends Fragment {
     private Context context;
     private LocationCallback mLocationCallback;
     private FusedLocationProviderClient mFusedLocationClient;
-    private Catalog catalog;
+    private LocalCatalog localCatalog;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -123,8 +122,6 @@ public class InsertCatalogFragment extends Fragment {
 
                 if(latitude != 0d){
 
-                    Log.d("latitude>>>>>>>", latitude.toString());
-
                     new Thread(new Runnable() {
 
                         String exception = null;
@@ -136,20 +133,20 @@ public class InsertCatalogFragment extends Fragment {
                             SharedPreferences sharedPref = Objects.requireNonNull(getActivity()).getSharedPreferences("bio", Context.MODE_PRIVATE);
                             String rg = sharedPref.getString("rg_bio", "");
 
-                            catalog = new Catalog();
-                            catalog.setRg(rg);
-                            catalog.setSex(sexSpinner.getSelectedItem().toString());
-                            catalog.setAge(ageSpinner.getSelectedItem().toString());
-                            catalog.setIdentificationCode(identificationCode.getText().toString());
-                            catalog.setNotes(notes.getText().toString());
-                            catalog.setLatitude(latitude);
-                            catalog.setLongitude(longitude);
-                            catalog.setSpecies(localSpecies.getId());
-                            catalog.setTimestamp((System.currentTimeMillis()/1000));
+                            localCatalog = new LocalCatalog();
+                            localCatalog.setRg(rg);
+                            localCatalog.setSex(sexSpinner.getSelectedItem().toString());
+                            localCatalog.setAge(ageSpinner.getSelectedItem().toString());
+                            localCatalog.setIdentificationCode(identificationCode.getText().toString());
+                            localCatalog.setNotes(notes.getText().toString());
+                            localCatalog.setLatitude(latitude);
+                            localCatalog.setLongitude(longitude);
+                            localCatalog.setSpecies(localSpecies.getId());
+                            localCatalog.setTimestamp((System.currentTimeMillis()/1000));
 
                             AppDatabase database = Room.databaseBuilder(context,
                                     AppDatabase.class, "BioBirding").build();
-                            database.catalogDao().insert(catalog);
+                            database.catalogDao().insert(localCatalog);
                             response = true;
 
                             handler.post(new Runnable() {
@@ -209,21 +206,21 @@ public class InsertCatalogFragment extends Fragment {
                                 SharedPreferences sharedPref = Objects.requireNonNull(getActivity()).getSharedPreferences("bio", Context.MODE_PRIVATE);
                                 String rg = sharedPref.getString("rg_bio", "");
 
-                                catalog = new Catalog();
-                                catalog.setRg(rg);
-                                catalog.setSex(sexSpinner.getSelectedItem().toString());
-                                catalog.setAge(ageSpinner.getSelectedItem().toString());
-                                catalog.setIdentificationCode(identificationCode.getText().toString());
-                                catalog.setNotes(notes.getText().toString());
-                                catalog.setLatitude(latitude);
-                                catalog.setLongitude(longitude);
-                                catalog.setSpecies(localSpecies.getId());
-                                catalog.setTimestamp((System.currentTimeMillis()/1000));
+                                localCatalog = new LocalCatalog();
+                                localCatalog.setRg(rg);
+                                localCatalog.setSex(sexSpinner.getSelectedItem().toString());
+                                localCatalog.setAge(ageSpinner.getSelectedItem().toString());
+                                localCatalog.setIdentificationCode(identificationCode.getText().toString());
+                                localCatalog.setNotes(notes.getText().toString());
+                                localCatalog.setLatitude(latitude);
+                                localCatalog.setLongitude(longitude);
+                                localCatalog.setSpecies(localSpecies.getId());
+                                localCatalog.setTimestamp((System.currentTimeMillis()/1000));
 
                                 InsertCatalogWithoutGpsFragment insertCatalogWithoutGpsFragment = new InsertCatalogWithoutGpsFragment();
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                 Bundle bundle = new Bundle();
-                                bundle.putSerializable("catalog", catalog);
+                                bundle.putSerializable("catalog", localCatalog);
                                 insertCatalogWithoutGpsFragment.setArguments(bundle);
                                 transaction.replace(R.id.fragment_container, insertCatalogWithoutGpsFragment);
                                 transaction.commit();

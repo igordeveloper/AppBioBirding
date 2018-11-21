@@ -36,7 +36,7 @@ public class InsertSpeciesFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_add_species, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_species, container, false);
 
         this.context = getContext();
         this.spinner = view.findViewById(R.id.sexLIst);
