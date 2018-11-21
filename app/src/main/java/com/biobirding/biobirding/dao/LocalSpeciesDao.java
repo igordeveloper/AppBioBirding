@@ -14,6 +14,9 @@ public interface LocalSpeciesDao {
     @Query("SELECT * FROM popular_names")
     List<LocalSpecies> getAll();
 
+    @Query("SELECT * FROM popular_names where id = :id")
+    LocalSpecies select(Integer id);
+
     @Query("SELECT * FROM popular_names " +
             "where scientific_name LIKE '%' || :value || '%'" +
             "OR name LIKE '%' || :value || '%'" +
