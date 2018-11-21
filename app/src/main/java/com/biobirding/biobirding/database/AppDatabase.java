@@ -7,12 +7,12 @@ import android.content.Context;
 import com.biobirding.biobirding.dao.CatalogDao;
 import com.biobirding.biobirding.dao.LastUpdateDao;
 import com.biobirding.biobirding.dao.LocalSpeciesDao;
-import com.biobirding.biobirding.entity.Catalog;
+import com.biobirding.biobirding.entity.LocalCatalog;
 import com.biobirding.biobirding.entity.LastUpdate;
 import com.biobirding.biobirding.entity.LocalSpecies;
 
 
-@Database(entities = {LocalSpecies.class, LastUpdate.class, Catalog.class}, version = 1, exportSchema = false)
+@Database(entities = {LocalSpecies.class, LastUpdate.class, LocalCatalog.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
