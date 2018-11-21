@@ -103,7 +103,7 @@ public class PopularNameCall extends RequestCall{
                             "&newName="+newName);
         JSONObject json = super.Response();
 
-        return json.getString("status") == "true";
+        return json.getString("status").equals("true");
     }
 
     public Boolean delete(PopularName  popularName) throws InterruptedException, IOException, JSONException {
@@ -119,7 +119,7 @@ public class PopularNameCall extends RequestCall{
             throw new InterruptedException(json.getString("exception"));
         }
 
-        return json.getString("status") == "true";
+        return json.getString("status").equals("true");
 
     }
 }

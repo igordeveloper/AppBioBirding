@@ -46,7 +46,6 @@ public class RequestCall {
             String str = rg + "||" + password + "||" + accessLevel;
             byte[] authorization = str.getBytes("UTF-8");
             this.con.setRequestProperty("authorizationCode", Base64.encodeToString(authorization, Base64.NO_WRAP).trim());
-            Log.d("-----------------", Base64.encodeToString(authorization, Base64.NO_WRAP).trim());
         } catch (IOException e) {
             e.printStackTrace();
         }
