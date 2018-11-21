@@ -81,7 +81,8 @@
         <activity
             android:name=".activity.ReportActivity"
             android:noHistory="true" />
-        <activity android:name=".activity.UserActivity"></activity>
+        <activity android:name=".activity.UserActivity" />
+        <activity android:name=".activity.SearchActivity"></activity>
     </application>
 
 </manifest>
