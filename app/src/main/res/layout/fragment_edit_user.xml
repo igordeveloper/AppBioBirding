@@ -18,7 +18,7 @@
 
 
         <Spinner
-            android:id="@+id/accessLevelList"
+            android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:layout_marginBottom="1dp"
@@ -67,7 +67,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <EditText
-            android:id="@+id/rg"
+            android:id="@+id/identificationCode"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:layout_marginBottom="1dp"
@@ -78,7 +78,7 @@
             android:enabled="false"
             android:hint="@string/rg"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/editUser"
+            app:layout_constraintBottom_toTopOf="@+id/send"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +95,7 @@
             android:ems="10"
             android:hint="@string/crBio"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/accessLevelList"
+            app:layout_constraintBottom_toTopOf="@+id/city"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,7 +113,7 @@
             android:enabled="false"
             android:hint="@string/nickname"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/rg"
+            app:layout_constraintBottom_toTopOf="@+id/identificationCode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -151,7 +151,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accessLevelList">
+            app:layout_constraintTop_toBottomOf="@+id/city">
 
             <RadioButton
                 android:id="@+id/enabled"
@@ -168,7 +168,7 @@
         </RadioGroup>
 
         <Button
-            android:id="@+id/editUser"
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="55dp"
             android:layout_marginTop="4dp"
@@ -176,6 +176,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rg" />
+            app:layout_constraintTop_toBottomOf="@+id/identificationCode" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

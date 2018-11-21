@@ -18,7 +18,7 @@
 
 
         <Spinner
-            android:id="@+id/accessLevelList"
+            android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginBottom="14dp"
@@ -26,7 +26,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="13dp"
             android:spinnerMode="dialog"
-            app:layout_constraintBottom_toTopOf="@+id/editUser"
+            app:layout_constraintBottom_toTopOf="@+id/send"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,14 +62,14 @@
             android:ems="10"
             android:hint="@string/fullName"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/rg"
+            app:layout_constraintBottom_toTopOf="@+id/identificationCode"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView"
             app:layout_constraintVertical_bias="1.0" />
         <EditText
-            android:id="@+id/rg"
+            android:id="@+id/identificationCode"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_marginBottom="14dp"
@@ -95,7 +95,7 @@
             android:ems="10"
             android:hint="@string/crBio"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/accessLevelList"
+            app:layout_constraintBottom_toTopOf="@+id/city"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -133,7 +133,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rg" />
+            app:layout_constraintTop_toBottomOf="@+id/identificationCode" />
 
         <EditText
             android:id="@+id/password"
@@ -154,7 +154,7 @@
             app:layout_constraintTop_toBottomOf="@+id/nickname" />
 
         <Button
-            android:id="@+id/editUser"
+            android:id="@+id/send"
             android:layout_width="wrap_content"
             android:layout_height="46dp"
             android:layout_marginTop="14dp"
@@ -162,6 +162,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/accessLevelList" />
+            app:layout_constraintTop_toBottomOf="@+id/city" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
