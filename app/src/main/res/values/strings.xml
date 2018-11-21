@@ -100,8 +100,8 @@
 
     <string name="wait">AGUARDAR</string>
     <string name="send">ENVIAR</string>
-    <string name="latitude">Latitude ex: -23.1786101</string>
-    <string name="longitude">Longitude ex: -46.7682101</string>
+    <string name="latitude_example">Latitude ex: -23.1786101</string>
+    <string name="longitude_example">Longitude ex: -46.7682101</string>
     <string name="title_no_gps">Informe as coordenadas para finalizar o registro.</string>
     <string name="coordinate_error">Coordenada inválida</string>
 
@@ -118,10 +118,33 @@
 
     <string name="edit_users">Editar Usuários</string>
     <string name="usersList">Lista de usuários</string>
-    
+
     <string name="enabled">Habilitado</string>
     <string name="disabled">Desativado</string>
-    
+
+
+    <!-- search catalog -->
+    <string name="search_catalog">Pesquisar registros</string>
+    <string name="bird_name">Nome da ave</string>
+    <string name="records_found">Registros encontrados</string>
+    <string name="species">Espécie</string>
+    <string name="date">Data</string>
+
+    <!--catalog-->
+    <string name="temperature">Temperatura</string>
+    <string name="humidity">Umidade</string>
+    <string name="wind">Velocidade do vento</string>
+    <string name="weather">Condição do tempo</string>
+    <string name="neighborhood">Bairro</string>
+    <string name="state">Estado</string>
+    <string name="city">Cidade</string>
+    <string name="edit_register">Editar registro</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="update_register">Registro atualizado com sucesso!</string>
+
+
+    <string name="message_delete_catalog">Deseja realmente remover o registro?</string>
 
     <string name="about_text">
 
