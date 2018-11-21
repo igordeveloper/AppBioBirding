@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -51,7 +52,6 @@ public class ReportActivity extends BaseActivity implements DatePickerDialog.OnD
         loading.setVisibility(View.GONE);
 
         requestReport = findViewById(R.id.requestReport);
-        requestReport.setEnabled(false);
 
         startDate = findViewById(R.id.startDate);
         startDate.setShowSoftInputOnFocus(false);
@@ -68,10 +68,11 @@ public class ReportActivity extends BaseActivity implements DatePickerDialog.OnD
             @Override
             public void onClick(View v) {
                 android.support.v4.app.DialogFragment date = new DatePickerFragment();
+                startDate.setError(null);
                 Bundle bundle = new Bundle();
                 bundle.putLong("minDate", minDate);
                 date.setArguments(bundle);
-                date.show(getSupportFragmentManager(), "igor");
+                date.show(getSupportFragmentManager(), "");
             }
         });
 
@@ -79,10 +80,11 @@ public class ReportActivity extends BaseActivity implements DatePickerDialog.OnD
             @Override
             public void onClick(View v) {
                 android.support.v4.app.DialogFragment date = new DatePickerFragment();
+                finishDate.setError(null);
                 Bundle bundle = new Bundle();
                 bundle.putLong("minDate", minDate);
                 date.setArguments(bundle);
-                date.show(getSupportFragmentManager(), "igor");
+                date.show(getSupportFragmentManager(), "");
             }
         });
 
@@ -90,39 +92,49 @@ public class ReportActivity extends BaseActivity implements DatePickerDialog.OnD
             @Override
             public void onClick(View v) {
 
-                loading.setVisibility(View.VISIBLE);
-                requestReport.setEnabled(false);
+                if(validateFields()){
+                    loading.setVisibility(View.VISIBLE);
+                    requestReport.setEnabled(false);
 
-                context = v.getContext();
+                    context = v.getContext();
 
-                new Thread(new Runnable() {
+                    new Thread(new Runnable() {
 
-                    String exception = null;
-                    Boolean response = false;
+                        String exception = null;
+                        Boolean response = false;
 
-                    @Override
-                    public void run() {
+                        @Override
+                        public void run() {
 
-                        SharedPreferences sharedPref = Objects.requireNonNull(getSharedPreferences("bio", Context.MODE_PRIVATE));
-                        String rg = sharedPref.getString("rg_bio", "");
-                        ReportCall reportCall = new ReportCall();
-                        try {
-                            response = reportCall.send(rg, startDate.getText().toString(), finishDate.getText().toString());
-                        } catch (InterruptedException | IOException | JSONException e) {
-                            exception = e.getMessage();
-                        }
+                            SharedPreferences sharedPref = Objects.requireNonNull(getSharedPreferences("bio", Context.MODE_PRIVATE));
+                            String rg = sharedPref.getString("rg_bio", "");
+                            ReportCall reportCall = new ReportCall();
+                            try {
+                                response = reportCall.send(rg, startDate.getText().toString(), finishDate.getText().toString());
+                            } catch (InterruptedException | IOException | JSONException e) {
+                                exception = e.getMessage();
+                            }
 
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                                    AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
-                                if(exception == null){
-                                    if(response){
-                                        alert.setMessage(R.string.send_report);
+                                    if(exception == null){
+                                        if(response){
+                                            alert.setMessage(R.string.send_report);
+                                        }else{
+                                            alert.setMessage(R.string.no_report);
+                                            requestReport.setEnabled(true);
+                                            loading.setVisibility(View.GONE);
+                                            startDate.setText("");
+                                            finishDate.setText("");
+                                            startDate.setEnabled(true);
+                                            minDate = 0L;
+                                        }
                                     }else{
-                                        alert.setMessage(R.string.no_report);
+                                        alert.setMessage(exception);
                                         requestReport.setEnabled(true);
                                         loading.setVisibility(View.GONE);
                                         startDate.setText("");
@@ -130,32 +142,26 @@ public class ReportActivity extends BaseActivity implements DatePickerDialog.OnD
                                         startDate.setEnabled(true);
                                         minDate = 0L;
                                     }
-                                }else{
-                                    alert.setMessage(exception);
-                                    requestReport.setEnabled(true);
-                                    loading.setVisibility(View.GONE);
-                                    startDate.setText("");
-                                    finishDate.setText("");
-                                    startDate.setEnabled(true);
-                                    minDate = 0L;
-                                }
 
-                                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        if(response){
-                                            startActivity(new Intent(ReportActivity.this, MainActivity.class));
+                                    alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if(response){
+                                                startActivity(new Intent(ReportActivity.this, MainActivity.class));
+                                            }
                                         }
-                                    }
-                                });
+                                    });
 
-                                alert.show();
+                                    alert.show();
 
-                            }
-                        });
+                                }
+                            });
 
-                    }
-                }).start();
+                        }
+                    }).start();
+                }
+
+
             }
         });
     }
@@ -169,17 +175,28 @@ public class ReportActivity extends BaseActivity implements DatePickerDialog.OnD
         String fullDate = simpleDateFormat.format(calendar.getTime());
 
         if(minDate == 0L){
-
             this.startDate.setText(fullDate);
             this.startDate.setEnabled(false);
-
             this.minDate = calendar.getTimeInMillis();
             this.startDate.setEnabled(false);
             this.finishDate.setEnabled(true);
         }else{
             this.finishDate.setText(fullDate);
             this.finishDate.setEnabled(false);
-            this.requestReport.setEnabled(true);
         }
+    }
+
+    public boolean validateFields(){
+        if(TextUtils.isEmpty(startDate.getText().toString())){
+            startDate.setError(getString(R.string.requiredText));
+            return false;
+        }
+
+        if(TextUtils.isEmpty(finishDate.getText().toString())){
+            finishDate.setError(getString(R.string.requiredText));
+            return false;
+        }
+
+        return true;
     }
 }

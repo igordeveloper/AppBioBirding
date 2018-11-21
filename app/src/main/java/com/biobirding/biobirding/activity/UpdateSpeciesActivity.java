@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -108,8 +109,9 @@ public class UpdateSpeciesActivity extends AppCompatActivity {
                                             calendar.setTimeInMillis(System.currentTimeMillis());
                                             calendar.set(Calendar.HOUR_OF_DAY, new Random().nextInt(23));
                                             calendar.set(Calendar.MINUTE, new Random().nextInt(59));
-                                            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                                                    AlarmManager.INTERVAL_DAY, alarmSpeciesIntent);
+
+                                            alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                                                    calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmSpeciesIntent);
 
                                             startActivity(new Intent(UpdateSpeciesActivity.this, MainActivity.class));
                                         }else{

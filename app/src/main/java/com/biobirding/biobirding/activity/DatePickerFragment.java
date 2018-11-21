@@ -33,7 +33,7 @@ public class DatePickerFragment extends DialogFragment{
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog dialog = new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        DatePickerDialog dialog = new DatePickerDialog( getContext(), (DatePickerDialog.OnDateSetListener) getContext(), year, month, day);
         dialog.getDatePicker().setMinDate(this.minDate);
 
         if(getArguments().getLong("minDate") > 0L){

@@ -57,7 +57,7 @@ public class BaseActivity extends AppCompatActivity {
                 startActivity(new Intent(BaseActivity.this, LogoffActivity.class));
                 return true;
 
-            case R.id.editUser:
+            case R.id.send:
                 startActivity(new Intent(BaseActivity.this,UserActivity.class));
                 return true;
 
