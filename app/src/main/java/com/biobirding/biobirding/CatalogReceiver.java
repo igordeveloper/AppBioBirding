@@ -11,7 +11,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.biobirding.biobirding.database.AppDatabase;
-import com.biobirding.biobirding.entity.Catalog;
+import com.biobirding.biobirding.entity.LocalCatalog;
 import com.biobirding.biobirding.webservice.CatalogCall;
 
 import org.json.JSONException;
@@ -29,7 +29,6 @@ public class CatalogReceiver extends BroadcastReceiver {
         this.context = c;
 
 
-
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -40,12 +39,12 @@ public class CatalogReceiver extends BroadcastReceiver {
                     boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
                     if (isConnected) {
                         AppDatabase database = Room.databaseBuilder(context, AppDatabase.class, "BioBirding").build();
-                        List<Catalog> list = database.catalogDao().getAll();
+                        List<LocalCatalog> list = database.catalogDao().getAll();
 
                         if(list.size() > 0){
                             CatalogCall catalogCall = new CatalogCall();
                             Boolean response;
-                            for (Catalog catalog:list) {
+                            for (LocalCatalog catalog:list) {
                                 try {
                                     response = catalogCall.selectCount(catalog);
                                     if(!response){

@@ -5,6 +5,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
+
 import java.util.Calendar;
 import java.util.Random;
 
@@ -20,8 +22,10 @@ public class SpeciesBootReceiver extends BroadcastReceiver {
             calendar.setTimeInMillis(System.currentTimeMillis());
             calendar.set(Calendar.HOUR_OF_DAY, new Random().nextInt(23));
             calendar.set(Calendar.MINUTE, new Random().nextInt(59));
-            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                    AlarmManager.INTERVAL_DAY, alarmSpeciesIntent);
+
+            alarmMgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                    calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmSpeciesIntent);
+
         }
     }
 }
